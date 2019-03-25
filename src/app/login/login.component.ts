@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
-        this.authenticationService.login(this.f.username.value, this.f.password.value)
+        /* this.authenticationService.login(this.f.username.value, this.f.password.value)
             .pipe(first())
             .subscribe(
                 data => {
@@ -60,6 +60,8 @@ export class LoginComponent implements OnInit {
                 error => {
                     this.error = error;
                     this.loading = false;
-                });
+                }); */
+        console.warn('Working!');
+        this.router.navigate([this.returnUrl]);
     }
 }
