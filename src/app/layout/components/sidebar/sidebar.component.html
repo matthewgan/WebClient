@@ -1,6 +1,78 @@
 <nav class="sidebar" [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed}">
     <div class="list-group">
-        <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('stores')">
+                <i class="fas fa-store"></i>&nbsp;
+                <span>{{ '店铺管理' }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'stores'">
+                <ul class="submenu">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="fa fa-plus"></i>&nbsp;
+                            <span>{{ '新增店铺' }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('inventory')">
+                <i class="fas fa-boxes"></i>&nbsp;
+                <span>{{ '库存管理' }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'inventory'">
+                <ul class="submenu">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="fas fa-plus-circle"></i>&nbsp;
+                            <span>{{ '入库' }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="fa fa-dolly"></i>&nbsp;
+                            <span>{{ '转仓' }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="fas fa-minus-circle"></i>&nbsp;
+                            <span>{{ '出库' }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="fas fa-search"></i>&nbsp;
+                            <span>{{ '库存查询' }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('sales')">
+                <i class="fas fa-search"></i>&nbsp;
+                <span>{{ '销量查询' }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'sales'">
+                <ul class="submenu">
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="fas fa-list"></i>&nbsp;
+                            <span>{{ '总销售TOP5' }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)">
+                            <i class="fas fa-list"></i>&nbsp;
+                            <span>{{ '店铺TOP10' }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <!-- <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
             <i class="fa fa-fw fa-tachometer-alt"></i>&nbsp;
             <span>{{ 'Dashboard' | translate }}</span>
         </a>
@@ -63,10 +135,10 @@
         <a href="http://www.strapui.com/" class="list-group-item">
             <i class="fa fa-caret-down"></i>&nbsp;
             <span>{{ 'More Themes' | translate }}</span>
-        </a>
+        </a> -->
 
-<!--         <div class="header-fields">
-            <a (click)="rltAndLtr()" class="list-group-item">
+         <div class="header-fields">
+            <!-- <a (click)="rltAndLtr()" class="list-group-item">
                 <span><i class="fa fa-arrows-h"></i>&nbsp; RTL/LTR</span>
             </a>
             <div class="nested-menu">
@@ -112,14 +184,14 @@
                         </li>
                     </ul>
                 </li>
-            </div>
+            </div> -->
             <div class="nested-menu">
                 <a class="list-group-item" (click)="addExpandClass('profile')">
-                    <span><i class="fa fa-user"></i>&nbsp; John Smith</span>
+                    <span><i class="fa fa-user"></i>&nbsp; admin</span>
                 </a>
                 <li class="nested" [class.expand]="showMenu === 'profile'">
                     <ul class="submenu">
-                        <li>
+                        <!-- <li>
                             <a href="javascript:void(0)">
                                 <span><i class="fa fa-fw fa-user"></i> {{ 'Profile' | translate }}</span>
                             </a>
@@ -133,7 +205,7 @@
                             <a href="javascript:void(0)">
                                 <span><i class="fa fa-fw fa-gear"></i> {{ 'Settings' | translate }}</span>
                             </a>
-                        </li>
+                        </li> -->
                         <li>
                             <a [routerLink]="['/login']" (click)="onLoggedout()">
                                 <span><i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}</span>
@@ -142,10 +214,10 @@
                     </ul>
                 </li>
             </div>
-        </div> -->
+        </div>
     </div>
     <div class="toggle-button" [ngClass]="{collapsed: collapsed}" (click)="toggleCollapsed()">
         <i class="fa fa-fw fa-angle-double-{{collapsed?'right':'left'}}"></i>&nbsp;
-        <span>{{ 'Collapse Sidebar' | translate }}</span>
+        <span>{{ '折叠' }}</span>
     </div>
 </nav>
