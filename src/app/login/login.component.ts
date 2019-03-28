@@ -51,17 +51,17 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
-        /* this.authenticationService.login(this.f.username.value, this.f.password.value)
+        this.authenticationService.login(this.f.username.value, this.f.password.value)
             .pipe(first())
             .subscribe(
                 data => {
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
-                    this.error = error;
+                    this.error = '用户名或密码错误，请重新登录！';
                     this.loading = false;
-                }); */
-        console.warn('Working!');
-        this.router.navigate([this.returnUrl]);
+                });
+        /* console.warn('Working!');
+        this.router.navigate([this.returnUrl]); */
     }
 }
