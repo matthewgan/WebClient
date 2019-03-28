@@ -24,12 +24,13 @@ export class AuthenticationService {
             .pipe(map(response => {
                 // login successful if there's a jwt token in the response
                 if (response) {
-                    console.log(response);
+                   /*  console.log(response); */
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('CurrentToken', JSON.stringify(response));
                     localStorage.setItem('CurrentUser', username);
-                    console.log(username);
-                    console.log(localStorage.getItem('CurrentToken'));
+                    sessionStorage.setItem('currentToken', JSON.stringify(response));
+/*                     console.log(username);
+                    console.log(localStorage.getItem('CurrentToken')); */
                 }
 
 
@@ -39,6 +40,7 @@ export class AuthenticationService {
 
     logout() {
         // remove user from local storage to log user out
-        localStorage.removeItem('currentToken');
+        localStorage.removeItem('CurrentToken');
+        localStorage.removeItem('CurrentUser');
     }
 }
