@@ -5,6 +5,6 @@ import { IStore } from 'src/app/shared/interfaces';
 export class TrackByService {
 
   store(index: number, store: IStore) {
-    return store.id;
+    return store.name;
   }
 }

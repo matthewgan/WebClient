@@ -13,29 +13,24 @@
                           <th cmSortBy="state.name" (sorted)="sort($event)">State</th>
                           <th (click)="sort('orderTotal')">Order Total</th> -->
                           <th>Name</th>
-                          <th>Inventory</th>
+                          <th>City</th>
+                          <!-- <th>Size</th>
+                          <th>Capacity</th> -->
+                          <th>Opening Time</th>
                           <th>&nbsp;</th>
                       </tr>
                   </thead>
                   <tbody>
-                      <!-- <tr *ngFor="let store of stores">
-                          <td><img src="assets/images/{{ customer.gender | lowercase }}.png"
-                                  class="grid-image" alt="Customer Image" /></td>
-                          <td><a [routerLink]="['/stores',store.id]">{{ store.name }}</a></td>
-                          <td>{{ customer.lastName | capitalize }}</td>
-                          <td>{{ customer.address }}</td>
-                          <td>{{ customer.city | trim }}</td>
-                          <td>{{ customer.state.name }}</td>
-                          <td>{{ customer.orderTotal | currency:'USD':'symbol' }}</td>
-                          <td><a [routerLink]="['/customers',customer.id,'orders']">View Orders</a></td>
-                      </tr> -->
-                      <tr>
-                          <td><a>grid works!</a></td>
-                          <td><a>grid works!</a></td>
-                          <td><a>grid works!</a></td>
-                          <td><a>grid works!</a></td>
-                          <td><a>grid works!</a></td>
-                          <td><a>grid works!</a></td>
+                      <tr *ngFor="let store of stores">
+                          <!-- <td><img src="assets/images/{{ customer.gender | lowercase }}.png"
+                                  class="grid-image" alt="Customer Image" /></td> -->
+                          <td><a [routerLink]="['/stores']">{{ store.name }}</a></td>
+                          <td>{{ store.city }}</td>
+                          <!-- <td>{{ store.size }}</td>
+                          <td>{{ store.capacity }}</td> -->
+                          <td>{{ store.openingTime }}</td>
+                          <!-- <td>{{ customer.orderTotal | currency:'USD':'symbol' }}</td>
+                          <td><a [routerLink]="['/customers',customer.id,'orders']">View Orders</a></td> -->
                       </tr>
                       <!-- <tr *ngIf="!customers.length">
                           <td>&nbsp;</td>

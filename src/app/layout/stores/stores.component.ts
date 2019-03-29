@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { IStore } from 'src/app/shared/interfaces';
 import { routerTransition } from 'src/app/router.animations';
+import { DataService } from 'src/app/core/services/data.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stores',
@@ -8,17 +10,19 @@ import { routerTransition } from 'src/app/router.animations';
   animations: [routerTransition()]
 })
 export class StoresComponent implements OnInit {
-
   title: string;
   stores: IStore[] = [];
-  filteredStores: IStore[] = [];
-  totalRecords = 0;
-  pageSize = 10;
 
-  constructor() { }
+  constructor(private dataservice: DataService) {}
 
   ngOnInit() {
     this.title = 'Stores';
+    this.getShops();
   }
 
+  getShops() {
+    this.dataservice.getShops().subscribe(stores => {
+      this.stores = stores;
+    });
+  }
 }
