@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { IStore } from 'src/app/shared/interfaces';
 import { routerTransition } from 'src/app/router.animations';
 import { DataService } from 'src/app/core/services/data.service';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stores',
@@ -12,6 +11,8 @@ import { map } from 'rxjs/operators';
 export class StoresComponent implements OnInit {
   title: string;
   stores: IStore[] = [];
+  totalRecords = 10;
+  pageSize = 4;
 
   constructor(private dataservice: DataService) {}
 
@@ -24,5 +25,8 @@ export class StoresComponent implements OnInit {
     this.dataservice.getShops().subscribe(stores => {
       this.stores = stores;
     });
+  }
+
+  pageChanged(page: number) {
   }
 }

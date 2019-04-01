@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { StoresRoutingModule } from './stores-routing.module';
 import { StoresComponent } from './stores.component';
-import { PageHeaderModule } from 'src/app/shared';
+import { PageHeaderModule, PaginationModule } from 'src/app/shared';
 import { StoresGridComponent } from './stores-grid/stores-grid.component';
 
 @NgModule({
@@ -11,7 +11,8 @@ import { StoresGridComponent } from './stores-grid/stores-grid.component';
   imports: [
     CommonModule,
     StoresRoutingModule,
-    PageHeaderModule
+    PageHeaderModule,
+    PaginationModule,
   ]
 })
 export class StoresModule { }

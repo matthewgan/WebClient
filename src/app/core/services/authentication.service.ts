@@ -42,5 +42,6 @@ export class AuthenticationService {
         // remove user from local storage to log user out
         localStorage.removeItem('CurrentToken');
         localStorage.removeItem('CurrentUser');
+        sessionStorage.removeItem('currentToken');
     }
 }
