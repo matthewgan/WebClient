@@ -1,6 +1,17 @@
 <div [@routerTransition]>
   <app-page-header [heading]="'Inventory'" [icon]="'fas fa-boxes'"></app-page-header>
-<p>
-  inventory works!
-</p>
+  <div class="row">
+      <div class="col-xl-3 col-lg-6">
+          <app-stat [bgClass]="'info'" [icon]="'fas fa-plus-circle'" [label]="'入库'" [routerLink]="['/inventory']"></app-stat>
+      </div>
+      <div class="col-xl-3 col-lg-6">
+          <app-stat [bgClass]="'warning'" [icon]="'fa fa-dolly'" [label]="'转仓'" [routerLink]="['/inventory']" ></app-stat>
+      </div>
+      <div class="col-xl-3 col-lg-6">
+          <app-stat [bgClass]="'success'" [icon]="'fas fa-minus-circle'" [label]="'出库'" [routerLink]="['/inventory']"></app-stat>
+      </div>
+      <div class="col-xl-3 col-lg-6">
+          <app-stat [bgClass]="'primary'" [icon]="'fas fa-search'" [label]="'库存查询'" [routerLink]="['/inventory']"></app-stat>
+      </div>
+  </div>
 </div>
