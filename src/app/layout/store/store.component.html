@@ -1,0 +1,40 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'New Store'" [icon]="'fas fa-plus'"></app-page-header>
+    <div class="container">
+        <div class="store-add">
+            <form (ngSubmit)="submit()" #storeForm="ngForm" class="store-form" novalidate>
+              <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" name="Name" [(ngModel)]="store.name" #Name="ngModel" required>
+                <div class="alert alert-danger" [hidden]="Name.pristine || Name.valid">Name is required</div>
+              </div>
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" class="form-control" name="city" [(ngModel)]="store.city" #city="ngModel" required>
+                <div class="alert alert-danger" [hidden]="city.pristine || city.valid">City is required</div>
+              </div>
+<!--               <div class="form-group">
+                  <label>Opening Time</label>
+                  <div class="input-group datepicker-input">
+                      <input class="form-control" placeholder="YYYY-MM-DD"
+                          name="openingTime" [(ngModel)]="store.openingTime" ngbDatepicker #d="ngbDatepicker">
+                      <button class="input-group-addon" (click)="d.toggle()" type="button">
+                          <span class="fa fa-calendar"></span>
+                      </button>
+                  </div>
+              </div> -->
+              <div class="pull-right">
+                  <button class="btn btn-default" (click)="cancel($event)">Cancel</button>&nbsp;&nbsp;
+                  <button type="submit" class="btn btn-success" [disabled]="storeForm.pristine || !storeForm.valid">{{ operationText }}</button>
+              </div>
+              <div class="alert alert-danger" *ngIf="errorMessage != null">{{ errorMessage }}</div>
+            </form>
+            <br />
+          </div>
+    </div>
+<!--     <div class="container">
+        <br />
+        <br />
+        <a routerLink="/stores">View all Stores</a>
+    </div> -->
+</div>

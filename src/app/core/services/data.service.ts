@@ -19,19 +19,17 @@ export class DataService {
 
   getShops() {
       /* console.log(this.httpOptions.headers.get('Authorization')); */
-      return this.http.get<IStore[]>(`${environment.apiUrl}/api/shop`, this.httpOptions)
-            .pipe(
-              map(res => {
-                this.formateDate(res);
-                return res;
-              })
-            );
+      return this.http.get<IStore[]>(`${environment.apiUrl}/api/shop`, this.httpOptions);
   }
 
-  formateDate(stores: IStore[]) {
+/*   formateDate(stores: IStore[]) {
     for (const store of stores) {
       store.openingTime = new Date(store.openingTime).toLocaleDateString();
     }
+  } */
+
+  addShop(store: IStore) {
+    return this.http.post<IStore>(`${environment.apiUrl}/api/shop/add/`, store, this.httpOptions);
   }
 
 }
