@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IStore } from 'src/app/shared/interfaces';
 import { routerTransition } from 'src/app/router.animations';
-import { DataService } from 'src/app/core/services/data.service';
+import { ShopService } from 'src/app/core/services/shop.service';
 
 @Component({
   selector: 'app-stores',
@@ -14,7 +14,7 @@ export class StoresComponent implements OnInit {
   totalRecords = 10;
   pageSize = 4;
 
-  constructor(private dataservice: DataService) {}
+  constructor(private dataservice: ShopService) {}
 
   ngOnInit() {
     this.title = 'Stores';

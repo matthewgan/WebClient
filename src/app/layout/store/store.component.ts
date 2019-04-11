@@ -3,7 +3,7 @@ import { routerTransition } from 'src/app/router.animations';
 import { IStore } from 'src/app/shared/interfaces';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DataService } from 'src/app/core/services/data.service';
+import { ShopService } from 'src/app/core/services/shop.service';
 
 @Component({
   selector: 'app-store',
@@ -24,7 +24,7 @@ export class StoreComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private dataService: DataService
+    private dataService: ShopService
   ) { }
 
   ngOnInit() {

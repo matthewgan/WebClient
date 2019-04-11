@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class DataService {
+export class ShopService {
 
   constructor(private http: HttpClient) { }
 

@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { IStore } from 'src/app/shared/interfaces';
-import { TrackByService } from 'src/app/core/services/trackby.service';
 
 @Component({
   selector: 'app-stores-grid',

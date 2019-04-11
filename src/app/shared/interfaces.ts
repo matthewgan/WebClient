@@ -5,3 +5,8 @@ export interface IStore {
   size?: number;
   locationDetail?: string;
 }
+
+export interface ISupplier {
+  id: number;
+
+}
