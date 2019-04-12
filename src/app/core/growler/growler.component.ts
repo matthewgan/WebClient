@@ -4,8 +4,15 @@ import { GrowlerService, GrowlerMessageType } from './growler.service';
 
 @Component({
   selector: 'app-growler',
-  templateUrl: './growler.component.html',
-  styleUrls: ['./growler.component.scss']
+  template: `
+    <div [ngClass]="position" class="growler">
+      <div *ngFor="let growl of growls" [ngClass]="{active: growl.enabled}"
+          class="growl alert {{ growl.messageType }}">
+          <span class="growl-message">{{ growl.message }}</span>
+      </div>
+    </div>
+  `,
+  styleUrls: ['growler.component.scss']
 })
 export class GrowlerComponent implements OnInit {
 

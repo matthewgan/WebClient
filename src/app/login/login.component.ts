@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AuthenticationService } from '../core/services/authentication.service';
 import { routerTransition } from '../router.animations';
+import { GrowlerService, GrowlerMessageType } from '../core/growler/growler.service';
 
 
 @Component({
@@ -17,13 +18,14 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     returnUrl: string;
-    error = '';
+    error: string;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private growler: GrowlerService
     ) { }
 
     ngOnInit() {
@@ -54,6 +56,7 @@ export class LoginComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
+                    this.growler.growl('登陆成功', GrowlerMessageType.Info);
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
