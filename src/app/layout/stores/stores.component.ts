@@ -24,7 +24,7 @@ export class StoresComponent implements OnInit {
   }
 
   getShops() {
-    this.shopService.getShops().subscribe(stores => {
+    this.shopService.list().subscribe(stores => {
       this.stores = stores;
     });
   }

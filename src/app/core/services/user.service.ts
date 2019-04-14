@@ -8,6 +8,9 @@ import { IUserInfo } from '../../shared/interfaces/user.interface';
 @Injectable()
 export class UserService {
 
+    isSaved = false;
+    user: IUserInfo;
+
     constructor(private http: HttpClient) { }
 
     user_url = environment.apiUrl + '/rest_auth/user/';
@@ -15,13 +18,29 @@ export class UserService {
     getUserInfo() {
         this.http.get<IUserInfo>(this.user_url).pipe(first()).subscribe(
             userinfo => {
-                console.log(userinfo.pk);
+                this.saveUserInfo(userinfo);
             }
         );
     }
 
-    getUserId() {
-
+    saveUserInfo(userinfo: IUserInfo) {
+        this.user = userinfo;
+        this.isSaved = true;
     }
 
+    getUserId(): number {
+        if (!this.isSaved) {
+            this.getUserInfo();
+        }
+
+        return this.user.pk;
+    }
+
+    getUserName(): string {
+        if (!this.isSaved) {
+            this.getUserInfo();
+        }
+
+        return this.user.username;
+    }
 }

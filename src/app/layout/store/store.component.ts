@@ -32,7 +32,7 @@ export class StoreComponent implements OnInit {
   }
 
   submit() {
-    this.dataService.addShop(this.store)
+    this.dataService.add(this.store)
       .subscribe((createdStore: IShopInfo) => {
         if (createdStore) {
           this.storeForm.form.markAsPristine();

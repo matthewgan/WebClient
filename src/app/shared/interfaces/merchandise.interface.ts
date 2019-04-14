@@ -20,3 +20,7 @@ export interface IMerchandiseCreateRequest {
     factory?: string;
     unit?: string;
 }
+
+export class MerchandiseQuery {
+    barcode: string;
+}
