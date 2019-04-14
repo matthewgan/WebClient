@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { IStore } from 'src/app/shared/interfaces';
+import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
 
 @Component({
   selector: 'app-stores-grid',
@@ -9,7 +9,7 @@ import { IStore } from 'src/app/shared/interfaces';
 })
 export class StoresGridComponent implements OnInit {
 
-  @Input() stores: IStore[] = [];
+  @Input() stores: IShopInfo[] = [];
 
   constructor() { }
 

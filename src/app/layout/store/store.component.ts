@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { routerTransition } from 'src/app/router.animations';
-import { IStore } from 'src/app/shared/interfaces';
+import { IShopInfo, IShopCreateRequest } from 'src/app/shared/interfaces/shop.interface';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ShopService } from 'src/app/core/services/shop.service';
@@ -13,9 +13,10 @@ import { ShopService } from 'src/app/core/services/shop.service';
 })
 export class StoreComponent implements OnInit {
 
-  store: IStore = {
+  store: IShopCreateRequest = {
     name: '',
-    city: ''
+    city: '',
+
   };
 
   errorMessage: string;
@@ -32,7 +33,7 @@ export class StoreComponent implements OnInit {
 
   submit() {
     this.dataService.addShop(this.store)
-      .subscribe((createdStore: IStore) => {
+      .subscribe((createdStore: IShopInfo) => {
         if (createdStore) {
           this.storeForm.form.markAsPristine();
           this.router.navigate(['/stores']);

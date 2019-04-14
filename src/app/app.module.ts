@@ -8,7 +8,7 @@ import { LanguageTranslationModule } from './shared/modules/language-translation
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
-import { GrowlerModule } from './core/growler/growler.module';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
     imports: [
@@ -18,7 +18,7 @@ import { GrowlerModule } from './core/growler/growler.module';
         HttpClientModule,
         LanguageTranslationModule,
         AppRoutingModule,
-        GrowlerModule
+        CoreModule,
     ],
     declarations: [AppComponent],
     providers: [AuthGuard],

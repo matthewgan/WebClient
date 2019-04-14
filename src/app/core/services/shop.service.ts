@@ -1,25 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { IStore } from 'src/app/shared/interfaces';
+import { HttpClient } from '@angular/common/http';
+import { IShopInfo, IShopCreateRequest } from 'src/app/shared/interfaces/shop.interface';
 import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ShopService {
+
+  shop_url = environment.apiUrl + '/api/shop/';
 
   constructor(private http: HttpClient) { }
 
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-type': 'application/json',
-      'Authorization': 'Token ' + JSON.parse(localStorage.getItem('CurrentToken')).key
-    })
-  };
-
   getShops() {
-      /* console.log(this.httpOptions.headers.get('Authorization')); */
-      return this.http.get<IStore[]>(`${environment.apiUrl}/api/shop`, this.httpOptions);
+      return this.http.get<IShopInfo[]>(this.shop_url);
   }
 
 /*   formateDate(stores: IStore[]) {
@@ -28,8 +20,7 @@ export class ShopService {
     }
   } */
 
-  addShop(store: IStore) {
-    return this.http.post<IStore>(`${environment.apiUrl}/api/shop/add/`, store, this.httpOptions);
+  addShop(store: IShopCreateRequest) {
+    return this.http.post<IShopInfo>(this.shop_url + 'add/', store);
   }
-
 }

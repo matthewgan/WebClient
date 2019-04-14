@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { AuthenticationService } from '../core/services/authentication.service';
 import { routerTransition } from '../router.animations';
 import { GrowlerService, GrowlerMessageType } from '../core/growler/growler.service';
-
 
 @Component({
   selector: 'app-login',
@@ -34,9 +34,6 @@ export class LoginComponent implements OnInit {
             password: ['', Validators.required]
         });
 
-        // reset login status
-        this.authenticationService.logout();
-
         // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
@@ -52,6 +49,7 @@ export class LoginComponent implements OnInit {
             return;
         }
         this.loading = true;
+
         this.authenticationService.login(this.f.username.value, this.f.password.value)
             .pipe(first())
             .subscribe(

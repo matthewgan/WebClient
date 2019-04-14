@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IStore } from 'src/app/shared/interfaces';
+import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
 import { routerTransition } from 'src/app/router.animations';
 import { ShopService } from 'src/app/core/services/shop.service';
 
@@ -10,11 +10,13 @@ import { ShopService } from 'src/app/core/services/shop.service';
 })
 export class StoresComponent implements OnInit {
   title: string;
-  stores: IStore[] = [];
+  stores: IShopInfo[] = [];
   totalRecords = 10;
   pageSize = 4;
 
-  constructor(private dataservice: ShopService) {}
+  constructor(
+    private shopService: ShopService,
+  ) {}
 
   ngOnInit() {
     this.title = 'Stores';
@@ -22,7 +24,7 @@ export class StoresComponent implements OnInit {
   }
 
   getShops() {
-    this.dataservice.getShops().subscribe(stores => {
+    this.shopService.getShops().subscribe(stores => {
       this.stores = stores;
     });
   }
