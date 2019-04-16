@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
     selector: 'app-page-header',
@@ -9,7 +9,18 @@ import { RouterModule } from '@angular/router';
 export class PageHeaderComponent implements OnInit {
     @Input() heading: string;
     @Input() icon: string;
-    constructor() {}
 
-    ngOnInit() {}
+    operationText: string;
+    constructor(
+      private route: ActivatedRoute
+    ) {}
+
+    ngOnInit() {
+      /* this.route.parent.params.subscribe((params: Params) => {
+        const id = +params['in'];
+        if (id !== 0) {
+          this.operationText = '';
+        }
+      }); */
+    }
 }

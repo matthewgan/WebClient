@@ -15,7 +15,7 @@ export class UserService {
 
     user_url = environment.apiUrl + '/rest_auth/user/';
 
-    getUserInfo() {
+    /* getUserInfo() {
         this.http.get<IUserInfo>(this.user_url).pipe(first()).subscribe(
             userinfo => {
                 this.saveUserInfo(userinfo);
@@ -42,5 +42,8 @@ export class UserService {
         }
 
         return this.user.username;
+    } */
+    getUserInfo() {
+      return this.http.get<IUserInfo>(this.user_url);
     }
 }

@@ -7,13 +7,15 @@ import { PageHeaderModule } from 'src/app/shared';
 import { StockInComponent } from './stock-in/stock-in.component';
 import { StockOutComponent } from './stock-out/stock-out.component';
 import { StockTransferComponent } from './stock-transfer/stock-transfer.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [StockComponent, StockInComponent, StockOutComponent, StockTransferComponent],
   imports: [
     CommonModule,
     StockRoutingModule,
-    PageHeaderModule
+    PageHeaderModule,
+    FormsModule
   ]
 })
 export class StockModule { }
