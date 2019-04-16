@@ -38,13 +38,13 @@
           </div>
           <div *ngIf="stockIn">
             <div class="alert alert-warning" *ngIf="!stockIn.merchandiseID && createNewMerchandiseEnabled">
-               Create New Merchandise?&nbsp;&nbsp;<button class="btn btn-danger" (click)="createNewMerchandiseEnabled = false">Yes</button>&nbsp;&nbsp;
+               Create New Merchandise?&nbsp;&nbsp;<button class="btn btn-danger" (click)="navigate($event)">Yes</button>&nbsp;&nbsp;
                <button class="btn btn-default" (click)="createNewMerchandiseEnabled = false">Cancel</button>
             </div>
             <!-- <button class="btn btn-danger" *ngIf="createNewMerchandiseEnabled" (click)="createNewMerchandiseEnabled = true">Create</button>&nbsp;&nbsp; -->
 
             <div class="pull-right" *ngIf="!createNewMerchandiseEnabled">
-              <button class="btn btn-default" (click)="createNewMerchandiseEnabled = true">Cancel</button>&nbsp;&nbsp;
+              <button class="btn btn-default" (click)="cancel($event)">Cancel</button>&nbsp;&nbsp;
               <button type="submit" class="btn btn-success" [disabled]="storeForm.pristine || !storeForm.valid">submit</button>
             </div>
           </div>

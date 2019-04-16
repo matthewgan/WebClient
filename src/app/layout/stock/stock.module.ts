@@ -8,9 +8,10 @@ import { StockInComponent } from './stock-in/stock-in.component';
 import { StockOutComponent } from './stock-out/stock-out.component';
 import { StockTransferComponent } from './stock-transfer/stock-transfer.component';
 import { FormsModule } from '@angular/forms';
+import { MerchandiseAddComponent } from './merchandise-add/merchandise-add.component';
 
 @NgModule({
-  declarations: [StockComponent, StockInComponent, StockOutComponent, StockTransferComponent],
+  declarations: [StockComponent, StockInComponent, StockOutComponent, StockTransferComponent, MerchandiseAddComponent],
   imports: [
     CommonModule,
     StockRoutingModule,

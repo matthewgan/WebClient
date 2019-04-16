@@ -9,6 +9,7 @@ import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler
 import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
 import { UserService } from 'src/app/core/services/user.service';
 import { subscribeOn } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stock-in',
@@ -40,7 +41,8 @@ export class StockInComponent implements OnInit {
     private shopService: ShopService,
     private merchandiseService: MerchandiseService,
     private growler: GrowlerService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -77,6 +79,16 @@ export class StockInComponent implements OnInit {
         this.user = user;
         this.stockIn.operator = this.user.pk;
       });
+  }
+
+  navigate(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/stock/add']);
+  }
+
+  cancel(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/inventory']);
   }
 
   submit() {}

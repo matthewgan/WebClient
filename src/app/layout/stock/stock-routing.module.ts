@@ -4,6 +4,7 @@ import { StockComponent } from './stock.component';
 import { StockInComponent } from './stock-in/stock-in.component';
 import { StockOutComponent } from './stock-out/stock-out.component';
 import { StockTransferComponent } from './stock-transfer/stock-transfer.component';
+import { MerchandiseAddComponent } from './merchandise-add/merchandise-add.component';
 
 const routes: Routes = [
   {
@@ -12,7 +13,8 @@ const routes: Routes = [
     children: [
       { path: 'in', component: StockInComponent },
       { path: 'out', component: StockOutComponent },
-      { path: 'transfer', component: StockTransferComponent }
+      { path: 'transfer', component: StockTransferComponent },
+      { path: 'add', component: MerchandiseAddComponent }
     ]
   }
 ];
