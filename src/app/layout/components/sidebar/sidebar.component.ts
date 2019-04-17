@@ -34,7 +34,7 @@ export class SidebarComponent implements OnInit {
         this.collapsed = false;
         this.showMenu = '';
         this.pushRightClass = 'push-right';
-        this.current_user = localStorage.getItem('CurrentUser');
+        this.current_user = localStorage.getItem('currentUser');
     }
 
 
@@ -48,7 +48,7 @@ export class SidebarComponent implements OnInit {
         } else {
             this.showMenu = element;
         }
-        this.router.navigate([element]);
+        //this.router.navigate([element]);
     }
 
     toggleCollapsed() {

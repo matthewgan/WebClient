@@ -8,8 +8,10 @@ import { MerchandiseQuery, IMerchandiseInfo } from 'src/app/shared/interfaces/me
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
 import { UserService } from 'src/app/core/services/user.service';
-import { subscribeOn } from 'rxjs/operators';
+import { subscribeOn, groupBy } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { SupplierService } from 'src/app/core/services/supplier.service';
+import { ISupplier } from 'src/app/shared/interfaces/supplier.interface';
 
 @Component({
   selector: 'app-stock-in',
@@ -34,6 +36,8 @@ export class StockInComponent implements OnInit {
     pk: -1,
     username: ''
   };
+  suppliers: ISupplier[] = [];
+
   createNewMerchandiseEnabled: boolean;
   @ViewChild('storeForm') storeForm: NgForm;
 
@@ -42,12 +46,20 @@ export class StockInComponent implements OnInit {
     private merchandiseService: MerchandiseService,
     private growler: GrowlerService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private supplierService: SupplierService,
   ) { }
 
   ngOnInit() {
     this.getShops();
     this.getUser();
+    this.getSuppliers();
+  }
+
+  getSuppliers() {
+    this.supplierService.list().subscribe((response) => {
+      this.suppliers = response.results;
+    });
   }
 
   getShops() {
@@ -56,19 +68,22 @@ export class StockInComponent implements OnInit {
     });
   }
 
-  getChange(id: number) {
+/*   getChange(id: number) {
     console.log('=========');
     console.log(id);
-  }
+  } */
 
-  queryid(merchandiseQuery: MerchandiseQuery) {
-    this.merchandiseService.getInfo(merchandiseQuery)
+  queryId(event: Event) {
+    event.preventDefault();
+    this.merchandiseService.getInfo(this.merchandiseQuery)
       .subscribe((merchandise: IMerchandiseInfo) => {
-          this.merchandise = merchandise;
-          this.stockIn.merchandiseID = merchandise.id;
+        this.growler.growl('查询成功！', GrowlerMessageType.Success);
+        this.merchandise = merchandise;
+        this.stockIn.merchandiseID = merchandise.id;
       },
       (err: any) => {
         this.growler.growl('商品不存在！', GrowlerMessageType.Danger);
+        this.stockIn.merchandiseID = 0;
         this.createNewMerchandiseEnabled = true;
       });
   }
@@ -83,6 +98,7 @@ export class StockInComponent implements OnInit {
 
   navigate(event: Event) {
     event.preventDefault();
+    localStorage.setItem('barcode', this.merchandiseQuery.barcode);
     this.router.navigate(['/stock/add']);
   }
 

@@ -28,6 +28,7 @@ export class AuthenticationService {
                 if (token) {
                     this.saveToken(token);
                     this.isAuthenticated = true;
+                    this.saveUser(username);
                     return true;
                 }
                 catchError(this.handleError);
@@ -37,6 +38,7 @@ export class AuthenticationService {
     logout() {
         if (this.isAuthenticated) {
             this.clearToken();
+            this.clearUser();
         }
         return this.http.post<any>(this.auth_url + '/logout/', this.httpOptions);
     }
@@ -53,6 +55,14 @@ export class AuthenticationService {
     clearToken() {
         localStorage.removeItem('token');
         sessionStorage.removeItem('isAuthenticated');
+    }
+
+    saveUser(username: string) {
+      localStorage.setItem('currentUser', username);
+    }
+
+    clearUser() {
+      localStorage.removeItem('currentUser');
     }
 
     public getAuthHeader() {
