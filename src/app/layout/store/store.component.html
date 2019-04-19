@@ -13,6 +13,10 @@
                 <input type="text" class="form-control" name="city" [(ngModel)]="store.city" #city="ngModel" required>
                 <div class="alert alert-danger" [hidden]="city.pristine || city.valid">City is required</div>
               </div>
+              <!-- <div>
+                <label>Capacity</label>
+                <input type="text" class="form-control" name="capacity" [(ngModel)]="store.capacity" #capacity="ngModel" required>
+              </div> -->
 <!--               <div class="form-group">
                   <label>Opening Time</label>
                   <div class="input-group datepicker-input">

@@ -12,6 +12,6 @@ export class SupplierService {
     constructor(private http: HttpClient) {}
 
     list() {
-        return this.http.get<ISupplierPagination>(this.supplier_url);
+        return this.http.get<ISupplier[]>(this.supplier_url);
     }
 }

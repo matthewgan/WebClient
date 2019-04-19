@@ -8,10 +8,10 @@ import { MerchandiseQuery, IMerchandiseInfo } from 'src/app/shared/interfaces/me
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
 import { UserService } from 'src/app/core/services/user.service';
-import { subscribeOn, groupBy } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SupplierService } from 'src/app/core/services/supplier.service';
 import { ISupplier } from 'src/app/shared/interfaces/supplier.interface';
+import { InventoryService } from 'src/app/core/services/inventory.service';
 
 @Component({
   selector: 'app-stock-in',
@@ -39,6 +39,7 @@ export class StockInComponent implements OnInit {
   suppliers: ISupplier[] = [];
 
   createNewMerchandiseEnabled: boolean;
+  searchedBarcode: boolean;
   @ViewChild('storeForm') storeForm: NgForm;
 
   constructor(
@@ -48,6 +49,7 @@ export class StockInComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private supplierService: SupplierService,
+    private inventoryService: InventoryService
   ) { }
 
   ngOnInit() {
@@ -57,9 +59,10 @@ export class StockInComponent implements OnInit {
   }
 
   getSuppliers() {
-    this.supplierService.list().subscribe((response) => {
-      this.suppliers = response.results;
-    });
+    this.supplierService.list()
+      .subscribe(suppliers => {
+        this.suppliers = suppliers;
+      });
   }
 
   getShops() {
@@ -80,6 +83,7 @@ export class StockInComponent implements OnInit {
         this.growler.growl('查询成功！', GrowlerMessageType.Success);
         this.merchandise = merchandise;
         this.stockIn.merchandiseID = merchandise.id;
+        this.searchedBarcode = true;
       },
       (err: any) => {
         this.growler.growl('商品不存在！', GrowlerMessageType.Danger);
@@ -107,5 +111,17 @@ export class StockInComponent implements OnInit {
     this.router.navigate(['/inventory']);
   }
 
-  submit() {}
+  submit() {
+    if (this.searchedBarcode) {
+      this.inventoryService.inStock(this.stockIn)
+      .subscribe((res: IStockInRequest) => {
+          this.storeForm.form.markAsPristine();
+          this.router.navigate(['/stock/in']);
+          this.searchedBarcode = false;
+          this.storeForm.resetForm();
+      });
+    } else {
+      this.growler.growl('Please check the barcode first', GrowlerMessageType.Warning);
+    }
+  }
 }

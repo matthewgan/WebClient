@@ -16,4 +16,5 @@ export interface IShopCreateRequest {
     city: string;
     locationDetail?: string;
     size?: number;
+    capacity: number;
 }

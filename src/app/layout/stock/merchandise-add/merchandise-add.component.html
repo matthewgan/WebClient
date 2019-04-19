@@ -4,7 +4,7 @@
             <div class="form-group">
                 <label>Mechandise Barcode</label>
                 <input type="text" class="form-control" name="barcode" [(ngModel)]="merchandise.barcode" #barcode="ngModel" required>
-                <!-- <div class="alert alert-danger" [hidden]="lastName.pristine || lastName.valid">Last Name is required</div> -->
+                <div class="alert alert-danger" [hidden]="barcode.pristine || barcode.valid">Barcode is required</div>
               </div>
           <div class="form-group">
             <label>Category</label>
@@ -12,25 +12,45 @@
               <option value="-1"></option>
               <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
             </select>
+            <div class="alert alert-danger" [hidden]="categoryId.pristine || categoryId.valid">CategoryID is required</div>
             <p>-------------categoryID: {{merchandise.categoryID}}</p>
           </div>
           <div class="form-group">
-            <label>Supplier Name</label>
+            <label>Merchandise Name</label>
             <input type="text" class="form-control" name="Name" [(ngModel)]="merchandise.name" #Name="ngModel" required>
-            <!-- <div class="alert alert-danger" [hidden]="city.pristine || city.valid">City is required</div> -->
+            <div class="alert alert-danger" [hidden]="Name.pristine || Name.valid">Name is required</div>
           </div>
+          <div class="form-group">
+              <label>Merchandise brand</label>
+              <input type="text" class="form-control" name="brand" [(ngModel)]="merchandise.brand" #brand="ngModel">
+              <!-- <div class="alert alert-danger" [hidden]="city.pristine || city.valid">City is required</div> -->
+          </div>
+          <div class="form-group">
+                <label>Merchandise Scale</label>
+                <input type="text" class="form-control" name="scale" [(ngModel)]="merchandise.scale" #scale="ngModel">
+                <!-- <div class="alert alert-danger" [hidden]="city.pristine || city.valid">City is required</div> -->
+          </div>
+          <div class="form-group">
+              <label>Merchandise factory</label>
+              <input type="text" class="form-control" name="factory" [(ngModel)]="merchandise.factory" #factory="ngModel" >
+              <!-- <div class="alert alert-danger" [hidden]="city.pristine || city.valid">City is required</div> -->
+        </div>
+        <div class="form-group">
+            <label>Merchandise unit</label>
+            <input type="text" class="form-control" name="unit" [(ngModel)]="merchandise.unit" #unit="ngModel">
+            <!-- <div class="alert alert-danger" [hidden]="city.pristine || city.valid">City is required</div> -->
+        </div>
           <!-- <div *ngIf="stockIn">
             <div class="alert alert-warning" *ngIf="!stockIn.merchandiseID && createNewMerchandiseEnabled">
                Create New Merchandise?&nbsp;&nbsp;<button class="btn btn-danger" (click)="navigate($event)">Yes</button>&nbsp;&nbsp;
                <button class="btn btn-default" (click)="createNewMerchandiseEnabled = false">Cancel</button>
             </div>
             <button class="btn btn-danger" *ngIf="createNewMerchandiseEnabled" (click)="createNewMerchandiseEnabled = true">Create</button>&nbsp;&nbsp;
-
-            <div class="pull-right" *ngIf="!createNewMerchandiseEnabled">
+ -->
+            <div class="pull-right">
               <button class="btn btn-default" (click)="cancel($event)">Cancel</button>&nbsp;&nbsp;
-              <button type="submit" class="btn btn-success" [disabled]="storeForm.pristine || !storeForm.valid">submit</button>
+              <button type="submit" class="btn btn-success" [disabled]="merchandiseForm.pristine || !merchandiseForm.valid">submit</button>
             </div>
-          </div> -->
           <!-- <div class="alert alert-danger" *ngIf="errorMessage != null">{{ errorMessage }}</div> -->
         </form>
         <br />

@@ -16,7 +16,7 @@ export class StoreComponent implements OnInit {
   store: IShopCreateRequest = {
     name: '',
     city: '',
-
+    capacity: 0
   };
 
   errorMessage: string;
