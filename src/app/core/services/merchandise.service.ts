@@ -12,7 +12,7 @@ export class MerchandiseService {
     constructor(private http: HttpClient) {}
 
     getInfo(info: MerchandiseQuery) {
-        return this.http.post<IMerchandiseInfo>(this.merchandise_url + 'query/', info);
+        return this.http.post<IMerchandiseInfo>(this.merchandise_url + 'fast_query/', info);
     }
 
     add(merchandise: IMerchandiseCreateRequest) {
