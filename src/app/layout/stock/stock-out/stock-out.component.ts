@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-
-import { StockOutRequest } from 'src/app/shared/interfaces/stock.interface';
+import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
+import { IStockOutRequest } from 'src/app/shared/interfaces/stock.interface';
+import { MerchandiseQuery, IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
+import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
 import { ShopService } from 'src/app/core/services/shop.service';
 import { MerchandiseService } from 'src/app/core/services/merchandise.service';
-import { InventoryService } from 'src/app/core/services/inventory.service';
+import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 import { UserService } from 'src/app/core/services/user.service';
-import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
-import { IMerchandiseInfo, MerchandiseQuery } from 'src/app/shared/interfaces/merchandise.interface';
-import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stock-out',
@@ -18,32 +16,30 @@ import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
 })
 export class StockOutComponent implements OnInit {
 
-  form: FormGroup;
-
-  shops: IShopInfo[];
-  merchandises: IMerchandiseInfo[];
-  merchandiseQuery: MerchandiseQuery;
-  user: IUserInfo;
-
-  stockOutRequest: StockOutRequest;
+  shops: IShopInfo[] = [];
+  stockOut: IStockOutRequest = {
+    shopID: 0,
+    merchandiseID: 0,
+    number: 0,
+    operator: 0
+  };
+  merchandiseQuery: MerchandiseQuery = {
+    barcode: ''
+  };
+  merchandise: IMerchandiseInfo;
+  user: IUserInfo = {
+    pk: -1,
+    username: ''
+  };
+  searchedBarcode: boolean;
 
   constructor(
-    private formBuilder: FormBuilder,
     private shopService: ShopService,
     private merchandiseService: MerchandiseService,
-    private inventoryService: InventoryService,
-    private userService: UserService) {
-    this.form = this.createFormGroup();
-  }
-
-  createFormGroup() {
-    return new FormGroup({
-      shopID: new FormControl(),
-      merchandiseID: new FormControl(),
-      number: new FormControl(),
-      operator: new FormControl(),
-    });
-  }
+    private growler: GrowlerService,
+    private userService: UserService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.getShops();
@@ -70,5 +66,27 @@ export class StockOutComponent implements OnInit {
       });
     }
   }
+
+
+  queryId(event: Event) {
+    event.preventDefault();
+    this.merchandiseService.getInfo(this.merchandiseQuery)
+      .subscribe((merchandise: IMerchandiseInfo) => {
+        if (merchandise) {
+          this.growler.growl('查询成功！', GrowlerMessageType.Success);
+          this.merchandise = merchandise;
+          this.stockOut.merchandiseID = merchandise.id;
+          this.searchedBarcode = true;
+        } else {
+          this.growler.growl('商品不存在！', GrowlerMessageType.Danger);
+          this.stockOut.merchandiseID = 0;
+        }
+      },
+      (err: any) => {
+        this.growler.growl('Barcode格式错误！', GrowlerMessageType.Danger);
+      });
+  }
+
+  submit() {}
 
 }

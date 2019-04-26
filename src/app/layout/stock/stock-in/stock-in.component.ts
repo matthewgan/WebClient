@@ -80,15 +80,19 @@ export class StockInComponent implements OnInit {
     event.preventDefault();
     this.merchandiseService.getInfo(this.merchandiseQuery)
       .subscribe((merchandise: IMerchandiseInfo) => {
-        this.growler.growl('查询成功！', GrowlerMessageType.Success);
-        this.merchandise = merchandise;
-        this.stockIn.merchandiseID = merchandise.id;
-        this.searchedBarcode = true;
+        if (merchandise) {
+          this.growler.growl('查询成功！', GrowlerMessageType.Success);
+          this.merchandise = merchandise;
+          this.stockIn.merchandiseID = merchandise.id;
+          this.searchedBarcode = true;
+        } else {
+          this.growler.growl('商品不存在！', GrowlerMessageType.Danger);
+          this.stockIn.merchandiseID = 0;
+          this.createNewMerchandiseEnabled = true;
+        }
       },
       (err: any) => {
-        this.growler.growl('商品不存在！', GrowlerMessageType.Danger);
-        this.stockIn.merchandiseID = 0;
-        this.createNewMerchandiseEnabled = true;
+        this.growler.growl('Barcode格式错误！', GrowlerMessageType.Danger);
       });
   }
 
