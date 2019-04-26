@@ -1,24 +1,29 @@
 export interface IMerchandiseInfo {
     id: number;
-    code?: string;
-    barcode: string;
     name: string;
     brand?: string;
     scale?: string;
-    factory?: string;
     unit?: string;
+    producePlace?: string;
+    originPrice?: string;
+    promotionPrice?: string;
+    clubPrice: string;
+    code?: string;
+    picture: string;
+    barcode: string;
     flavor?: string;
+    factory?: string;
 }
 
-export interface IMerchandiseCreateRequest {
-    code?: string;
+export class MerchandiseCreateRequest {
+    code: string;
     barcode: string;
     categoryID: number;
     name: string;
-    brand?: string;
-    scale?: string;
-    factory?: string;
-    unit?: string;
+    brand: string;
+    scale: string;
+    factory: string;
+    unit: string;
 }
 
 export class MerchandiseQuery {

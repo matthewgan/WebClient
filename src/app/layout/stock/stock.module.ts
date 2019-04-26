@@ -7,16 +7,25 @@ import { PageHeaderModule } from 'src/app/shared';
 import { StockInComponent } from './stock-in/stock-in.component';
 import { StockOutComponent } from './stock-out/stock-out.component';
 import { StockTransferComponent } from './stock-transfer/stock-transfer.component';
+import { StockQueryComponent } from './stock-query/stock-query.component';
 import { FormsModule } from '@angular/forms';
 import { MerchandiseAddComponent } from './merchandise-add/merchandise-add.component';
+import { DynamicFormModule } from 'src/app/shared/modules/dynamic-form/dynamic-form.module';
 
 @NgModule({
-  declarations: [StockComponent, StockInComponent, StockOutComponent, StockTransferComponent, MerchandiseAddComponent],
+  declarations: [
+    StockComponent,
+    StockInComponent,
+    StockOutComponent,
+    StockTransferComponent,
+    MerchandiseAddComponent,
+    StockQueryComponent],
   imports: [
     CommonModule,
     StockRoutingModule,
     PageHeaderModule,
-    FormsModule
+    FormsModule,
+    DynamicFormModule
   ]
 })
 export class StockModule { }

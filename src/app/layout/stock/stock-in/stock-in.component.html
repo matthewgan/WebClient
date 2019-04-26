@@ -3,11 +3,10 @@
         <form (ngSubmit)="submit()" #storeForm="ngForm" class="store-form" novalidate>
           <div class="form-group">
             <label>Shop Name</label>
-            <select input type="text" class="form-control selectpicker show-tick" name="shopId" [(ngModel)]="stockIn.shopID" #shopId="ngModel" required>
-              <option value="-1"></option>
+            <select input type="text" class="form-control selectpicker show-tick" 
+                    name="shopId" [(ngModel)]="stockIn.shopID" #shopId="ngModel" required>
               <option *ngFor="let shop of shops" [value]="shop.id">{{shop.name}}</option>
             </select>
-            <p>-------------ShopID: {{stockIn.shopID}}</p>
           </div>
           <div class="form-group">
             <label>Mechandise Barcode</label>
@@ -15,13 +14,11 @@
             <span class="form-group-btn">
                 <button class="btn btn-default" (click)="queryId($event)">search</button>
            </span>
-            <!-- <div class="alert alert-danger" [hidden]="lastName.pristine || lastName.valid">Last Name is required</div> -->
             <p>-------------merchandiseID: {{stockIn.merchandiseID}}</p>
           </div>
           <div class="form-group">
             <label>Number</label>
             <input type="text" class="form-control" name="number" [(ngModel)]="stockIn.number" #number="ngModel" required>
-            <!-- <div class="alert alert-danger" [hidden]="address.pristine || address.valid">Address is required</div> -->
           </div>
           <div class="form-group">
             <label>Supplier Name</label>
@@ -29,13 +26,10 @@
                 <option value="-1"></option>
                 <option *ngFor="let supplier of suppliers" [value]="supplier.id">{{supplier.companyName}}</option>
             </select>
-            <p>--------------supplierID:{{stockIn.supplierID}}</p>
-            <!-- <div class="alert alert-danger" [hidden]="city.pristine || city.valid">City is required</div> -->
           </div>
           <div class="form-group">
               <label>Operator Name</label>
               <input type="text" class="form-control" [value]="user.username">
-              <!-- <div class="alert alert-danger" [hidden]="city.pristine || city.valid">City is required</div> -->
               <p>-------------operatorID: {{stockIn.operator}}</p>
               <p>-------------operatorID: {{user.pk}}</p>
               <p>-------------operatorName: {{user.username}}</p>

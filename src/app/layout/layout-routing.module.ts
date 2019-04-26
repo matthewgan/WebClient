@@ -12,7 +12,8 @@ const routes: Routes = [
             { path: 'stores', loadChildren: './stores/stores.module#StoresModule' },
             { path: 'add', loadChildren: './store/store.module#StoreModule' },
             { path: 'inventory', loadChildren: './inventory/inventory.module#InventoryModule' },
-            { path: 'stock', loadChildren: './stock/stock.module#StockModule' }
+            { path: 'stock', loadChildren: './stock/stock.module#StockModule' },
+            { path: 'sales', loadChildren: './sales/sales.module#SalesModule' },
         ]
     }
 ];

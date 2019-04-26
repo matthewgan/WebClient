@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { routerTransition } from 'src/app/router.animations';
-import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
+
+import { UserService } from 'src/app/core/services/user.service';
+import { ShopService } from 'src/app/core/services/shop.service';
+
 
 @Component({
   selector: 'app-stock',
@@ -8,10 +11,31 @@ import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
   styleUrls: ['./stock.component.scss'],
   animations: [routerTransition()]
 })
-export class StockComponent implements OnInit {
-  constructor() { }
+export class StockComponent implements OnInit, OnDestroy {
+  constructor(
+    private userService: UserService,
+    private shopService: ShopService
+  ) { }
 
   ngOnInit() {
+    this.getShopsToStorage();
+    this.getUserToStorage();
   }
 
+  ngOnDestroy() {
+    sessionStorage.removeItem('shops');
+    sessionStorage.removeItem('user');
+  }
+
+  getShopsToStorage() {
+    this.shopService.list().subscribe(shops => {
+      sessionStorage.setItem('shops', JSON.stringify(shops));
+    });
+  }
+
+  getUserToStorage() {
+    this.userService.getUserInfo().subscribe(user => {
+      sessionStorage.setItem('user', JSON.stringify(user));
+    });
+  }
 }

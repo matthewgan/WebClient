@@ -9,8 +9,8 @@
           <div class="form-group">
             <label>Category</label>
             <select input type="text" class="form-control selectpicker show-tick" name="categoryId" [(ngModel)]="merchandise.categoryID" #categoryId="ngModel" required>
-              <option value="-1"></option>
               <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+              <option value="0"></option>
             </select>
             <div class="alert alert-danger" [hidden]="categoryId.pristine || categoryId.valid">CategoryID is required</div>
             <p>-------------categoryID: {{merchandise.categoryID}}</p>

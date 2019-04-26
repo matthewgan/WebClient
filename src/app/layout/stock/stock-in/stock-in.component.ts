@@ -31,7 +31,7 @@ export class StockInComponent implements OnInit {
   merchandiseQuery: MerchandiseQuery = {
     barcode: ''
   };
-  merchandise: IMerchandiseInfo;
+  merchandises: IMerchandiseInfo[];
   user: IUserInfo = {
     pk: -1,
     username: ''

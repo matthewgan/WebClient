@@ -4,9 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import {
     IStockInfo,
     IStockInRequest,
-    IStockOutRequest,
+    StockOutRequest,
     IStockQuery,
-    IStockTransferRequest } from 'src/app/shared/interfaces/stock.interface';
+    StockTransferRequest } from 'src/app/shared/interfaces/stock.interface';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class InventoryService {
         return this.http.post(this.stock_url + 'in/', record);
     }
 
-    outStock(record: IStockOutRequest) {
+    outStock(record: StockOutRequest) {
         return this.http.post(this.stock_url + 'out/', record);
     }
 
@@ -28,7 +28,7 @@ export class InventoryService {
         return this.http.post(this.stock_url + 'query/', info);
     }
 
-    transferStock(info: IStockTransferRequest) {
+    transferStock(info: StockTransferRequest) {
         return this.http.post(this.stock_url + 'transfer/', info);
     }
 

@@ -1,3 +1,9 @@
-<p>
-  stock-transfer works!
-</p>
+<div>
+  <dynamic-form
+    [config]="config"
+    #form="dynamicForm"
+    (submit)="onSubmit($event)">
+  </dynamic-form>
+  {{ form.valid }}
+  {{ form.value | json }}
+</div>

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ICategory } from 'src/app/shared/interfaces/category.interface';
-import { IMerchandiseCreateRequest } from 'src/app/shared/interfaces/merchandise.interface';
+import { MerchandiseCreateRequest } from 'src/app/shared/interfaces/merchandise.interface';
 import { CategoryService } from 'src/app/core/services/category.service';
 import { Router } from '@angular/router';
 import { MerchandiseService } from 'src/app/core/services/merchandise.service';
@@ -14,7 +14,8 @@ import { MerchandiseService } from 'src/app/core/services/merchandise.service';
 export class MerchandiseAddComponent implements OnInit {
 
   categories: ICategory[] = [];
-  merchandise: IMerchandiseCreateRequest = {
+  merchandise: MerchandiseCreateRequest = {
+    code: '',
     barcode: '',
     categoryID: 0,
     name: '',
@@ -53,7 +54,7 @@ export class MerchandiseAddComponent implements OnInit {
   submit() {
     console.log(this.merchandise);
     this.merchandiseService.add(this.merchandise)
-      .subscribe((createdMerchandise: IMerchandiseCreateRequest) => {
+      .subscribe((createdMerchandise: MerchandiseCreateRequest) => {
         this.merchandiseForm.form.markAsPristine();
         this.router.navigate(['/stock/in']);
       });

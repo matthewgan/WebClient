@@ -21,14 +21,14 @@ export interface IStockInRequest {
     operator: number;
 }
 
-export interface IStockOutRequest {
+export class StockOutRequest {
     shopID: number;
     merchandiseID: number;
     number: number;
     operator: number;
 }
 
-export interface IStockTransferRequest {
+export class StockTransferRequest {
     fromShop: number;
     toShop: number;
     merchandiseID: number;
