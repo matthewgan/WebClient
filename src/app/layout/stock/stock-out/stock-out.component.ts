@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
-import { IStockOutRequest } from 'src/app/shared/interfaces/stock.interface';
+import { StockOutRequest } from 'src/app/shared/interfaces/stock.interface';
 import { MerchandiseQuery, IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
 import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
 import { ShopService } from 'src/app/core/services/shop.service';
@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 export class StockOutComponent implements OnInit {
 
   shops: IShopInfo[] = [];
-  stockOut: IStockOutRequest = {
+  stockOut: StockOutRequest = {
     shopID: 0,
     merchandiseID: 0,
     number: 0,
@@ -26,7 +26,7 @@ export class StockOutComponent implements OnInit {
   merchandiseQuery: MerchandiseQuery = {
     barcode: ''
   };
-  merchandise: IMerchandiseInfo;
+  merchandises: IMerchandiseInfo[];
   user: IUserInfo = {
     pk: -1,
     username: ''
@@ -55,7 +55,7 @@ export class StockOutComponent implements OnInit {
   getUser() {
     this.userService.getUserInfo().subscribe(info => {
       this.user = info;
-      this.stockOutRequest.operator = this.user.pk;
+      this.stockOut.operator = this.user.pk;
     });
   }
 
@@ -71,11 +71,11 @@ export class StockOutComponent implements OnInit {
   queryId(event: Event) {
     event.preventDefault();
     this.merchandiseService.getInfo(this.merchandiseQuery)
-      .subscribe((merchandise: IMerchandiseInfo) => {
-        if (merchandise) {
+      .subscribe((merchandises: IMerchandiseInfo[]) => {
+        if (merchandises) {
           this.growler.growl('查询成功！', GrowlerMessageType.Success);
-          this.merchandise = merchandise;
-          this.stockOut.merchandiseID = merchandise.id;
+          this.merchandises = merchandises;
+          this.stockOut.merchandiseID = merchandises[0].id;
           this.searchedBarcode = true;
         } else {
           this.growler.growl('商品不存在！', GrowlerMessageType.Danger);
