@@ -1,24 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { IStockInRequest } from 'src/app/shared/interfaces/stock.interface';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
-import { ShopService } from 'src/app/core/services/shop.service';
-import { MerchandiseService } from 'src/app/core/services/merchandise.service';
-import { MerchandiseQuery, IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
-import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
-import { UserService } from 'src/app/core/services/user.service';
-import { Router } from '@angular/router';
-import { SupplierService } from 'src/app/core/services/supplier.service';
+import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/containers/dynamic-form/dynamic-form.component';
+import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
+import { BarcodeValidator } from 'src/app/shared/validators/barcode_exist.directive';
 import { ISupplier } from 'src/app/shared/interfaces/supplier.interface';
-import { InventoryService } from 'src/app/core/services/inventory.service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-stock-in',
   templateUrl: './stock-in.component.html',
   styleUrls: ['./stock-in.component.scss']
 })
-export class StockInComponent implements OnInit {
+/*export class StockInComponent implements OnInit {
 
   shops: IShopInfo[] = [];
   stockIn: IStockInRequest = {
@@ -71,19 +66,15 @@ export class StockInComponent implements OnInit {
     });
   }
 
-/*   getChange(id: number) {
-    console.log('=========');
-    console.log(id);
-  } */
 
   queryId(event: Event) {
     event.preventDefault();
     this.merchandiseService.getInfo(this.merchandiseQuery)
-      .subscribe((merchandise: IMerchandiseInfo) => {
-        if (merchandise) {
+      .subscribe((merchandises: IMerchandiseInfo[]) => {
+        if (merchandises) {
           this.growler.growl('查询成功！', GrowlerMessageType.Success);
-          this.merchandise = merchandise;
-          this.stockIn.merchandiseID = merchandise.id;
+          this.merchandises = merchandises;
+          this.stockIn.merchandiseID = merchandises.id;
           this.searchedBarcode = true;
         } else {
           this.growler.growl('商品不存在！', GrowlerMessageType.Danger);
@@ -127,5 +118,100 @@ export class StockInComponent implements OnInit {
     } else {
       this.growler.growl('Please check the barcode first', GrowlerMessageType.Warning);
     }
+  }
+} */
+
+export class StockInComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  shops: IShopInfo[] = JSON.parse(sessionStorage.getItem('shops'));
+  user: IUserInfo = JSON.parse(sessionStorage.getItem('user'));
+  suppliers: ISupplier[] = JSON.parse(sessionStorage.getItem('suppliers'));
+
+  config: FieldConfig[] = [
+    {
+      type: 'select',
+      label: 'Shop',
+      name: 'shopName',
+      options: [],
+      placeholder: 'Select a shop',
+      validation: [Validators.required],
+      value: []
+    },
+    {
+      type: 'input',
+      label: 'Merchandise',
+      name: 'merchandiseBarcode',
+      placeholder: 'Input barcode of the merchandise',
+      validation: [Validators.required, BarcodeValidator],
+    },
+    {
+      type: 'input',
+      label: 'number',
+      name: 'number',
+      validation: [Validators.required],
+    },
+    {
+      type: 'select',
+      label: 'Supplier',
+      name: 'supplierName',
+      options: [],
+      placeholder: 'Select a supplier',
+      validation: [Validators.required],
+      value: []
+    },
+    {
+      type: 'input',
+      label: 'operator',
+      name: 'operator',
+      disabled: true,
+      value: this.getCurrentUserName(),
+    },
+    {
+      label: 'Submit',
+      name: 'submit',
+      type: 'button',
+    }
+  ];
+
+  shopNameList: string[];
+  shopIDList: number[];
+
+  constructor(private cd: ChangeDetectorRef) {}
+
+  ngOnInit() {}
+
+  ngAfterViewInit() {
+    this.form.config.find(x => x.name === 'shopName').options = this.getShopNameList();
+    this.form.config.find(x => x.name === 'supplierName').options = this.getSupplierNameList();
+    this.cd.detectChanges();
+    let previousValid = this.form.valid;
+    this.form.changes.subscribe(() => {
+      if (this.form.valid !== previousValid) {
+        previousValid = this.form.valid;
+        this.form.setDisabled('submit', !previousValid);
+      }
+    });
+  }
+
+  getCurrentUserName() {
+    return this.user.username;
+  }
+
+  getShopNameList() {
+    return this.shops.map(x => x.name);
+  }
+
+  getShopIDList() {
+    return this.shops.map(t => t.id);
+  }
+
+  getSupplierNameList() {
+    return this.suppliers.map(s => s.companyName);
+  }
+
+  onSubmit(value: {[name: string]: any}) {
+    console.log(value);
   }
 }

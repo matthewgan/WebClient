@@ -1,9 +1,9 @@
-<div class="container">
+<!-- <div class="container">
     <div class="stock-In">
         <form (ngSubmit)="submit()" #storeForm="ngForm" class="store-form" novalidate>
           <div class="form-group">
             <label>Shop Name</label>
-            <select input type="text" class="form-control selectpicker show-tick" 
+            <select input type="text" class="form-control selectpicker show-tick"
                     name="shopId" [(ngModel)]="stockIn.shopID" #shopId="ngModel" required>
               <option *ngFor="let shop of shops" [value]="shop.id">{{shop.name}}</option>
             </select>
@@ -39,16 +39,22 @@
                Create New Merchandise?&nbsp;&nbsp;<button class="btn btn-danger" (click)="navigate($event)">Yes</button>&nbsp;&nbsp;
                <button class="btn btn-default" (click)="createNewMerchandiseEnabled = false">Cancel</button>
             </div>
-            <!-- <button class="btn btn-danger" *ngIf="createNewMerchandiseEnabled" (click)="createNewMerchandiseEnabled = true">Create</button>&nbsp;&nbsp; -->
 
             <div class="pull-right" *ngIf="!createNewMerchandiseEnabled">
               <button class="btn btn-default" (click)="cancel($event)">Cancel</button>&nbsp;&nbsp;
               <button type="submit" class="btn btn-success" [disabled]="storeForm.pristine || !storeForm.valid">submit</button>
             </div>
           </div>
-          <!-- <div class="alert alert-danger" *ngIf="errorMessage != null">{{ errorMessage }}</div> -->
         </form>
         <br />
       </div>
-</div>
-
+</div> -->
+<div class="container">
+    <dynamic-form
+      [config]="config"
+      #form="dynamicForm"
+      (submit)="onSubmit($event)">
+    </dynamic-form>
+    {{ form.valid }}
+    {{ form.value | json }}
+  </div>
