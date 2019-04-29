@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MerchandiseAddComponent } from './merchandise-add/merchandise-add.component';
 import { DynamicFormModule } from 'src/app/shared/modules/dynamic-form/dynamic-form.module';
 import { StockShopComponent } from './stock-shop/stock-shop.component';
+import { StockMerchandiseComponent } from './stock-merchandise/stock-merchandise.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { StockShopComponent } from './stock-shop/stock-shop.component';
     StockTransferComponent,
     MerchandiseAddComponent,
     StockQueryComponent,
-    StockShopComponent],
+    StockShopComponent,
+    StockMerchandiseComponent],
   imports: [
     CommonModule,
     StockRoutingModule,
