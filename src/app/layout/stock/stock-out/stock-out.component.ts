@@ -3,11 +3,7 @@ import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
 import { StockOutRequest } from 'src/app/shared/interfaces/stock.interface';
 import { MerchandiseQuery, IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
 import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
-import { ShopService } from 'src/app/core/services/shop.service';
 import { MerchandiseService } from 'src/app/core/services/merchandise.service';
-import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
-import { UserService } from 'src/app/core/services/user.service';
-import { Router } from '@angular/router';
 import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/containers/dynamic-form/dynamic-form.component';
 import { ISupplier } from 'src/app/shared/interfaces/supplier.interface';
 import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
@@ -45,19 +41,20 @@ export class StockOutComponent implements OnInit, AfterViewInit {
       validation: [Validators.required, BarcodeValidator],
     },
     {
+      type: 'select',
+      label: 'Merchandise',
+      name: 'merchandiseName',
+      options: [],
+      placeholder: 'Select a merchandise',
+      validation: [Validators.required],
+      value: [],
+      disabled: true
+    },
+    {
       type: 'input',
       label: 'number',
       name: 'number',
       validation: [Validators.required],
-    },
-    {
-      type: 'select',
-      label: 'Supplier',
-      name: 'supplierName',
-      options: [],
-      placeholder: 'Select a supplier',
-      validation: [Validators.required],
-      value: []
     },
     {
       type: 'input',
@@ -73,16 +70,28 @@ export class StockOutComponent implements OnInit, AfterViewInit {
     }
   ];
 
-  shopNameList: string[];
-  shopIDList: number[];
+  stockOut: StockOutRequest = {
+    shopID: 0,
+    merchandiseID: 0,
+    number: 0,
+    operator: 0
+  };
 
-  constructor(private cd: ChangeDetectorRef) {}
+  merchandiseQuery: MerchandiseQuery = {
+    barcode: ''
+  };
+  merchandises: IMerchandiseInfo[];
+  temp: any;
+
+  constructor(
+    private cd: ChangeDetectorRef,
+    private merchandiseService: MerchandiseService    ) {}
 
   ngOnInit() {}
 
   ngAfterViewInit() {
     this.form.config.find(x => x.name === 'shopName').options = this.getShopNameList();
-    this.form.config.find(x => x.name === 'supplierName').options = this.getSupplierNameList();
+    this.form.config.find(x => x.name === 'merchandiseName').options = this.getMerchandiseNameList();
     this.cd.detectChanges();
     let previousValid = this.form.valid;
     this.form.changes.subscribe(() => {
@@ -94,6 +103,7 @@ export class StockOutComponent implements OnInit, AfterViewInit {
   }
 
   getCurrentUserName() {
+    this.stockOut.operator = this.user.pk;
     return this.user.username;
   }
 
@@ -109,7 +119,29 @@ export class StockOutComponent implements OnInit, AfterViewInit {
     return this.suppliers.map(s => s.companyName);
   }
 
-  onSubmit(value: {[name: string]: any}) {
-    console.log(value);
+  onSubmit() {
+    this.temp = this.form.value;
+    this.setValue();
+  }
+
+  setValue() {
+    this.stockOut.shopID = this.getShopID();
+    this.stockOut.merchandiseID = this.getMerchandiseID();
+    this.stockOut.number = this.temp.number;
+  }
+
+  getMerchandiseNameList() {
+    this.merchandiseService.getInfo(this.merchandiseQuery)
+      .subscribe(merchandises => {
+        this.merchandises = merchandises;
+      });
+    return this.merchandises.map(m => m.name);
+  }
+  getShopID() {
+    return this.shops.find(x => x.name === this.temp.shopName).id;
+  }
+
+  getMerchandiseID() {
+    return this.merchandises.find(x => x.name === this.temp.merchandiseName).id;
   }
 }

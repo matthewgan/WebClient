@@ -114,6 +114,7 @@ export class StoreComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
+    console.log(this.form.value);
     this.shop = this.form.value;
     console.log(this.shop);
     this.shopService.add(this.shop)
