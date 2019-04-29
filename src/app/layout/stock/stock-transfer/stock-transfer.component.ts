@@ -13,7 +13,7 @@ import { EventBusService, Events } from 'src/app/core/services/event-bus.service
 import { IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
 import { MerchandiseService } from 'src/app/core/services/merchandise.service';
 import { InventoryService } from 'src/app/core/services/inventory.service';
-import { forEach } from '@angular/router/src/utils/collection';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stock-transfer',
@@ -124,11 +124,11 @@ export class StockTransferComponent implements AfterViewInit {
   }
 
   getShopNameList() {
-    return this.shops.map(x => x.name);
+    return this.shops.map(x => JSON.stringify(x));
   }
 
   getMerchandiseNameList() {
-    return this.merchandises.map(x => x.name);
+    return this.merchandises.map(x => JSON.stringify(x));
   }
 
   ngAfterViewInit() {
@@ -170,9 +170,26 @@ export class StockTransferComponent implements AfterViewInit {
   onSubmit(value: {[name: string]: any}) {
     console.log(value);
     // console.log(this.shopService.getShopIdByName(value['from_shop'], this.shops));
-    this.record.fromShop = this.shopService.getIdByName(value['from_shop'], this.shops);
-    this.record.toShop = this.shopService.getIdByName(value['to_shop'], this.shops);
+    // this.record.fromShop = this.shopService.getIdByName(value['from_shop'], this.shops);
+    // this.record.toShop = this.shopService.getIdByName(value['to_shop'], this.shops);
+    // this.record.operator = this.user.pk;
+    // this.record.merchandiseID = this.merchandiseService.getIdByName(value['merchandiseSelected'], this.merchandises);
+    this.record.fromShop = JSON.parse(value['from_shop']).id;
+    this.record.toShop = JSON.parse(value['to_shop']).id;
     this.record.operator = this.user.pk;
-    this.record.merchandiseID = this.merchandiseService.getIdByName(value['merchandiseSelected'], this.merchandises);
+    this.record.merchandiseID = JSON.parse(value['merchandiseSelected'].id);
+    this.record.number = value['number'];
+
+    this.inventoryService.transferStock(this.record).pipe(
+      map((res: Response) => {
+        if (res.status === 200) {
+
+        } else if (res.status === 204) {
+
+        } else {
+
+        }
+      })
+    );
   }
 }
