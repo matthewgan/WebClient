@@ -6,6 +6,7 @@ import { Cacheable } from 'ngx-cacheable';
 import { IShopInfo, IShopCreateRequest } from 'src/app/shared/interfaces/shop.interface';
 import { environment } from 'src/environments/environment';
 import { EventBusService, Events, EmitEvent } from './event-bus.service';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Injectable()
 export class ShopService {
@@ -32,5 +33,9 @@ export class ShopService {
 
   add(store: IShopCreateRequest) {
     return this.http.post<IShopInfo>(this.shop_url + 'add/', store);
+  }
+
+  getIdByName(name: string, shops: IShopInfo[]) {
+    return shops.find(x => x.name === name).id;
   }
 }

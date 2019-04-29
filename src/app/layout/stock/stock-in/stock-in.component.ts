@@ -8,10 +8,13 @@ import { ISupplier } from 'src/app/shared/interfaces/supplier.interface';
 import { IStockInRequest } from 'src/app/shared/interfaces/stock.interface';
 import { MerchandiseService } from 'src/app/core/services/merchandise.service';
 import { MerchandiseQuery, IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
-import { SELECT_VALUE_ACCESSOR } from '@angular/forms/src/directives/select_control_value_accessor';
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 import { InventoryService } from 'src/app/core/services/inventory.service';
 import { Router } from '@angular/router';
+import { EventBusService, Events } from 'src/app/core/services/event-bus.service';
+import { UserService } from 'src/app/core/services/user.service';
+import { ShopService } from 'src/app/core/services/shop.service';
+import { SupplierService } from 'src/app/core/services/supplier.service';
 
 @Component({
   selector: 'app-stock-in',
@@ -23,26 +26,27 @@ export class StockInComponent implements OnInit, AfterViewInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  shops: IShopInfo[] = JSON.parse(sessionStorage.getItem('shops'));
-  user: IUserInfo = JSON.parse(sessionStorage.getItem('user'));
-  suppliers: ISupplier[] = JSON.parse(sessionStorage.getItem('suppliers'));
+  shops: IShopInfo[];
+  user: IUserInfo;
+  suppliers: ISupplier[];
+  merchandises: IMerchandiseInfo[];
+  temp: any;
 
   config: FieldConfig[] = [
     {
       type: 'select',
       label: 'Shop',
-      name: 'shopName',
+      name: 'shop',
       options: [],
       placeholder: 'Select a shop',
       validation: [Validators.required],
-      value: []
     },
     {
       type: 'input',
       label: 'Barcode',
       name: 'merchandiseBarcode',
       placeholder: 'Input barcode of the merchandise',
-      validation: [Validators.required],
+      validation: [Validators.required, Validators.pattern('[0-9]{13}')]
     },
     {
       type: 'select',
@@ -51,7 +55,6 @@ export class StockInComponent implements OnInit, AfterViewInit {
       options: [],
       placeholder: 'Select a merchandise',
       validation: [Validators.required],
-      value: [],
       disabled: true
     },
     {
@@ -63,18 +66,17 @@ export class StockInComponent implements OnInit, AfterViewInit {
     {
       type: 'select',
       label: 'Supplier',
-      name: 'supplierName',
+      name: 'supplier',
       options: [],
       placeholder: 'Select a supplier',
       validation: [Validators.required],
-      value: []
     },
     {
       type: 'input',
       label: 'operator',
       name: 'operator',
       disabled: true,
-      value: this.getCurrentUserName(),
+      value: '',
     },
     {
       label: 'Submit',
@@ -91,63 +93,85 @@ export class StockInComponent implements OnInit, AfterViewInit {
     supplierID: 0,
     operator: 0
   };
-  merchandiseQuery: MerchandiseQuery = {
-    barcode: ''
-  };
-  merchandises: IMerchandiseInfo[];
-  temp: any;
+
 
   constructor(
-    private cd: ChangeDetectorRef,
+    // private cd: ChangeDetectorRef,
     private merchandiseService: MerchandiseService,
     private growlService: GrowlerService,
     private router: Router,
-    private inventoryService: InventoryService
+    private inventoryService: InventoryService,
+    private eventBus: EventBusService,
+    private userService: UserService,
+    private shopService: ShopService,
+    private supplierService: SupplierService,
     ) {}
 
   ngOnInit() {}
 
   ngAfterViewInit() {
-    this.form.config.find(x => x.name === 'shopName').options = this.getShopNameList();
-    this.form.config.find(x => x.name === 'supplierName').options = this.getSupplierNameList();
-    this.form.config.find(x => x.name === 'merchandiseName').options = this.getMerchandiseNameList();
-    this.cd.detectChanges();
-    let previousValid = this.form.valid;
+
+    // Subscription to events provided by all the services
+    this.eventBus.on(Events.UserChanged, (user => {
+      this.user = user;
+      this.updateFormOperatorValue();
+    }));
+    this.eventBus.on(Events.ShopListUpdated, (shops => {
+      this.shops = shops;
+      this.updateFormShopOptions();
+    }));
+    this.eventBus.on(Events.SupplierListUpdated, (suppliers => {
+      this.suppliers = suppliers;
+      this.updateFormSupplierOptions();
+    }));
+
+    // call the service to make sure emit events
+    this.userService.getUserFromEvent();
+    this.shopService.getShopListFromEvent();
+    this.supplierService.getSupplierListFromEvent();
+
     this.form.changes.subscribe(() => {
-      if (this.form.valid !== previousValid) {
-        previousValid = this.form.valid;
-        this.form.setDisabled('submit', !previousValid);
+
+      if (this.form.valid === true) {
+        this.form.setDisabled('submit', false);
+      } else {
+        this.form.setDisabled('submit', true);
       }
     });
   }
 
-  getCurrentUserName() {
-    return this.user.username;
+  updateFormOperatorValue() {
+    this.form.setValue('operator', this.user.username);
+    this.form.setDisabled('operator', true);
+  }
+
+  updateFormShopOptions() {
+    this.form.config.find(x => x.name === 'shop').options = this.getShopNameList();
+  }
+
+  updateFormSupplierOptions() {
+    this.form.config.find(x => x.name === 'supplier').options = this.getSupplierNameList();
   }
 
   getShopNameList() {
     return this.shops.map(x => x.name);
   }
 
-  getShopIDList() {
-    return this.shops.map(t => t.id);
-  }
-
   getSupplierNameList() {
-    return this.suppliers.map(s => s.companyName);
+    return this.suppliers.map(x => x.companyName);
   }
 
-  getMerchandiseNameList() {
-    this.merchandiseService.getInfo(this.merchandiseQuery)
-      .subscribe(merchandises => {
-        this.merchandises = merchandises;
-      });
-    return this.merchandises.map(m => m.name);
-  }
+  // getMerchandiseNameList() {
+  //   this.merchandiseService.getInfo(this.merchandiseQuery)
+  //     .subscribe(merchandises => {
+  //       this.merchandises = merchandises;
+  //     });
+  //   return this.merchandises.map(m => m.name);
+  // }
 
   onSubmit() {
     this.temp = this.form.value;
-    this.setValue();
+    // this.setValue();
     this.inventoryService.inStock(this.stockIn)
       .subscribe((res: IStockInRequest) => {
         if (res) {
@@ -159,23 +183,23 @@ export class StockInComponent implements OnInit, AfterViewInit {
       });
   }
 
-  setValue() {
-    this.stockIn.shopID = this.getShopID();
-    this.stockIn.merchandiseID = this.getMerchandiseID();
-    this.stockIn.number = this.temp.number;
-    this.stockIn.supplierID = this.getSupplierID();
-    this.stockIn.operator = this.user.pk;
-  }
+  // setValue() {
+  //   this.stockIn.shopID = this.getShopID();
+  //   this.stockIn.merchandiseID = this.getMerchandiseID();
+  //   this.stockIn.number = this.temp.number;
+  //   this.stockIn.supplierID = this.getSupplierID();
+  //   this.stockIn.operator = this.user.pk;
+  // }
 
-  getShopID() {
-    return this.shops.find(x => x.name === this.temp.shopName).id;
-  }
+  // getShopID() {
+  //   return this.shops.find(x => x.name === this.temp.shopName).id;
+  // }
 
-  getMerchandiseID() {
-    return this.merchandises.find(x => x.name === this.temp.merchandiseName).id;
-  }
+  // getMerchandiseID() {
+  //   return this.merchandises.find(x => x.name === this.temp.merchandiseName).id;
+  // }
 
-  getSupplierID() {
-    return this.suppliers.find(x => x.companyName === this.temp.supplierName).id;
-  }
+  // getSupplierID() {
+  //   return this.suppliers.find(x => x.companyName === this.temp.supplierName).id;
+  // }
 }

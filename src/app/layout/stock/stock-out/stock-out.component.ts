@@ -8,7 +8,6 @@ import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/contai
 import { ISupplier } from 'src/app/shared/interfaces/supplier.interface';
 import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
 import { Validators } from '@angular/forms';
-import { BarcodeValidator } from 'src/app/shared/validators/barcode_exist.directive';
 
 @Component({
   selector: 'app-stock-out',
@@ -38,7 +37,7 @@ export class StockOutComponent implements OnInit, AfterViewInit {
       label: 'Merchandise',
       name: 'merchandiseBarcode',
       placeholder: 'Input barcode of the merchandise',
-      validation: [Validators.required, BarcodeValidator],
+      validation: [Validators.required],
     },
     {
       type: 'select',
@@ -90,9 +89,9 @@ export class StockOutComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
-    this.form.config.find(x => x.name === 'shopName').options = this.getShopNameList();
-    this.form.config.find(x => x.name === 'merchandiseName').options = this.getMerchandiseNameList();
-    this.cd.detectChanges();
+    // this.form.config.find(x => x.name === 'shopName').options = this.getShopNameList();
+    // this.form.config.find(x => x.name === 'merchandiseName').options = this.getMerchandiseNameList();
+    // this.cd.detectChanges();
     let previousValid = this.form.valid;
     this.form.changes.subscribe(() => {
       if (this.form.valid !== previousValid) {
@@ -130,13 +129,13 @@ export class StockOutComponent implements OnInit, AfterViewInit {
     this.stockOut.operator = this.user.pk;
   }
 
-  getMerchandiseNameList() {
-    this.merchandiseService.getInfo(this.merchandiseQuery)
-      .subscribe(merchandises => {
-        this.merchandises = merchandises;
-      });
-    return this.merchandises.map(m => m.name);
-  }
+  // getMerchandiseNameList() {
+  //   this.merchandiseService.getInfo(this.merchandiseQuery)
+  //     .subscribe(merchandises => {
+  //       this.merchandises = merchandises;
+  //     });
+  //   return this.merchandises.map(m => m.name);
+  // }
   getShopID() {
     return this.shops.find(x => x.name === this.temp.shopName).id;
   }

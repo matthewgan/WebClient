@@ -1,14 +1,11 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { routerTransition } from 'src/app/router.animations';
 import { IShopInfo, IShopCreateRequest } from 'src/app/shared/interfaces/shop.interface';
-import { NgForm, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ShopService } from 'src/app/core/services/shop.service';
 import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/containers/dynamic-form/dynamic-form.component';
-import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
-import { ISupplier } from 'src/app/shared/interfaces/supplier.interface';
 import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
-import { BarcodeValidator } from 'src/app/shared/validators/barcode_exist.directive';
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 
 @Component({
