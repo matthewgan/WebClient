@@ -123,7 +123,6 @@ export class StockInComponent implements OnInit, AfterViewInit {
   }
 
   getCurrentUserName() {
-    this.stockIn.operator = this.user.pk;
     return this.user.username;
   }
 
@@ -166,6 +165,7 @@ export class StockInComponent implements OnInit, AfterViewInit {
     this.stockIn.merchandiseID = this.getMerchandiseID();
     this.stockIn.number = this.temp.number;
     this.stockIn.supplierID = this.getSupplierID();
+    this.stockIn.operator = this.user.pk;
   }
 
   getShopID() {
