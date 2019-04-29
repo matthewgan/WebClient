@@ -1,26 +1,89 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { IStockInRequest } from 'src/app/shared/interfaces/stock.interface';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
-import { ShopService } from 'src/app/core/services/shop.service';
+import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
+import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/containers/dynamic-form/dynamic-form.component';
+import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
+import { ISupplier } from 'src/app/shared/interfaces/supplier.interface';
+import { IStockInRequest } from 'src/app/shared/interfaces/stock.interface';
 import { MerchandiseService } from 'src/app/core/services/merchandise.service';
 import { MerchandiseQuery, IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
+import { SELECT_VALUE_ACCESSOR } from '@angular/forms/src/directives/select_control_value_accessor';
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
-import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
-import { UserService } from 'src/app/core/services/user.service';
-import { Router } from '@angular/router';
-import { SupplierService } from 'src/app/core/services/supplier.service';
-import { ISupplier } from 'src/app/shared/interfaces/supplier.interface';
 import { InventoryService } from 'src/app/core/services/inventory.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stock-in',
   templateUrl: './stock-in.component.html',
   styleUrls: ['./stock-in.component.scss']
 })
-export class StockInComponent implements OnInit {
 
-  shops: IShopInfo[] = [];
+export class StockInComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  shops: IShopInfo[] = JSON.parse(sessionStorage.getItem('shops'));
+  user: IUserInfo = JSON.parse(sessionStorage.getItem('user'));
+  suppliers: ISupplier[] = JSON.parse(sessionStorage.getItem('suppliers'));
+
+  config: FieldConfig[] = [
+    {
+      type: 'select',
+      label: 'Shop',
+      name: 'shopName',
+      options: [],
+      placeholder: 'Select a shop',
+      validation: [Validators.required],
+      value: []
+    },
+    {
+      type: 'input',
+      label: 'Barcode',
+      name: 'merchandiseBarcode',
+      placeholder: 'Input barcode of the merchandise',
+      validation: [Validators.required],
+    },
+    {
+      type: 'select',
+      label: 'Merchandise',
+      name: 'merchandiseName',
+      options: [],
+      placeholder: 'Select a merchandise',
+      validation: [Validators.required],
+      value: [],
+      disabled: true
+    },
+    {
+      type: 'input',
+      label: 'number',
+      name: 'number',
+      validation: [Validators.required],
+    },
+    {
+      type: 'select',
+      label: 'Supplier',
+      name: 'supplierName',
+      options: [],
+      placeholder: 'Select a supplier',
+      validation: [Validators.required],
+      value: []
+    },
+    {
+      type: 'input',
+      label: 'operator',
+      name: 'operator',
+      disabled: true,
+      value: this.getCurrentUserName(),
+    },
+    {
+      label: 'Submit',
+      name: 'submit',
+      type: 'button',
+      disabled: true
+    }
+  ];
+
   stockIn: IStockInRequest = {
     shopID: 0,
     merchandiseID: 0,
@@ -32,100 +95,87 @@ export class StockInComponent implements OnInit {
     barcode: ''
   };
   merchandises: IMerchandiseInfo[];
-  user: IUserInfo = {
-    pk: -1,
-    username: ''
-  };
-  suppliers: ISupplier[] = [];
-
-  createNewMerchandiseEnabled: boolean;
-  searchedBarcode: boolean;
-  @ViewChild('storeForm') storeForm: NgForm;
+  temp: any;
 
   constructor(
-    private shopService: ShopService,
+    private cd: ChangeDetectorRef,
     private merchandiseService: MerchandiseService,
-    private growler: GrowlerService,
-    private userService: UserService,
+    private growlService: GrowlerService,
     private router: Router,
-    private supplierService: SupplierService,
     private inventoryService: InventoryService
-  ) { }
+    ) {}
 
-  ngOnInit() {
-    this.getShops();
-    this.getUser();
-    this.getSuppliers();
-  }
+  ngOnInit() {}
 
-  getSuppliers() {
-    this.supplierService.list()
-      .subscribe(suppliers => {
-        this.suppliers = suppliers;
-      });
-  }
-
-  getShops() {
-    this.shopService.list().subscribe(shops => {
-      this.shops = shops;
+  ngAfterViewInit() {
+    this.form.config.find(x => x.name === 'shopName').options = this.getShopNameList();
+    this.form.config.find(x => x.name === 'supplierName').options = this.getSupplierNameList();
+    this.form.config.find(x => x.name === 'merchandiseName').options = this.getMerchandiseNameList();
+    this.cd.detectChanges();
+    let previousValid = this.form.valid;
+    this.form.changes.subscribe(() => {
+      if (this.form.valid !== previousValid) {
+        previousValid = this.form.valid;
+        this.form.setDisabled('submit', !previousValid);
+      }
     });
   }
 
-/*   getChange(id: number) {
-    console.log('=========');
-    console.log(id);
-  } */
+  getCurrentUserName() {
+    return this.user.username;
+  }
 
-  queryId(event: Event) {
-    event.preventDefault();
+  getShopNameList() {
+    return this.shops.map(x => x.name);
+  }
+
+  getShopIDList() {
+    return this.shops.map(t => t.id);
+  }
+
+  getSupplierNameList() {
+    return this.suppliers.map(s => s.companyName);
+  }
+
+  getMerchandiseNameList() {
     this.merchandiseService.getInfo(this.merchandiseQuery)
-      .subscribe((merchandises: IMerchandiseInfo[]) => {
-        if (merchandises) {
-          this.growler.growl('查询成功！', GrowlerMessageType.Success);
-          this.merchandises = merchandises;
-          this.stockIn.merchandiseID = merchandises[0].id;
-          this.searchedBarcode = true;
-        } else {
-          this.growler.growl('商品不存在！', GrowlerMessageType.Danger);
-          this.stockIn.merchandiseID = 0;
-          this.createNewMerchandiseEnabled = true;
-        }
-      },
-      (err: any) => {
-        this.growler.growl('Barcode格式错误！', GrowlerMessageType.Danger);
+      .subscribe(merchandises => {
+        this.merchandises = merchandises;
       });
+    return this.merchandises.map(m => m.name);
   }
 
-  getUser() {
-    this.userService.getUserInfo()
-      .subscribe(user => {
-        this.user = user;
-        this.stockIn.operator = this.user.pk;
-      });
-  }
-
-  navigate(event: Event) {
-    event.preventDefault();
-    localStorage.setItem('barcode', this.merchandiseQuery.barcode);
-    this.router.navigate(['/stock/add']);
-  }
-
-  cancel(event: Event) {
-    event.preventDefault();
-    this.router.navigate(['/inventory']);
-  }
-
-  submit() {
-    if (this.searchedBarcode) {
-      this.inventoryService.inStock(this.stockIn)
+  onSubmit() {
+    this.temp = this.form.value;
+    this.setValue();
+    this.inventoryService.inStock(this.stockIn)
       .subscribe((res: IStockInRequest) => {
-          this.storeForm.form.markAsPristine();
+        if (res) {
+          this.growlService.growl('添加成功', GrowlerMessageType.Success);
           this.router.navigate(['/stock/in']);
-          this.searchedBarcode = false;
-          this.storeForm.resetForm();
+        } else {
+          this.growlService.growl('添加失败', GrowlerMessageType.Danger);
+        }
       });
-    } else {
-      this.growler.growl('Please check the barcode first', GrowlerMessageType.Warning);
-    }
+  }
+
+  setValue() {
+    this.stockIn.shopID = this.getShopID();
+    this.stockIn.merchandiseID = this.getMerchandiseID();
+    this.stockIn.number = this.temp.number;
+    this.stockIn.supplierID = this.getSupplierID();
+    this.stockIn.operator = this.user.pk;
+  }
+
+  getShopID() {
+    return this.shops.find(x => x.name === this.temp.shopName).id;
+  }
+
+  getMerchandiseID() {
+    return this.merchandises.find(x => x.name === this.temp.merchandiseName).id;
+  }
+
+  getSupplierID() {
+    return this.suppliers.find(x => x.companyName === this.temp.supplierName).id;
   }
 }

@@ -7,15 +7,11 @@ import { routerTransition } from 'src/app/router.animations';
   styleUrls: ['./stock.component.scss'],
   animations: [routerTransition()]
 })
-export class StockComponent implements OnInit, OnDestroy {
+export class StockComponent implements OnInit {
   constructor(
   ) { }
 
   ngOnInit() {
-
-  }
-
-  ngOnDestroy() {
 
   }
 }

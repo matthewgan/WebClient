@@ -1,5 +1,3 @@
-<div [@routerTransition]>
-    <app-page-header [heading]="'Sales'" [icon]="'fas fa-search'"></app-page-header>
 <div class="container">
     <div class="row grid-container">
         <div class="col-md-10">
@@ -11,19 +9,21 @@
                             <th>Shop</th>
                             <th>Merchandise</th>
                             <th>Number</th>
+                            <th>Supplier</th>
                             <th>Created</th>
                             <th>Updated</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let sale of sales">
-                            <td>{{ sale.id }}</td>
-                            <td>{{ sale.shop }}</td>
-                            <td>{{ sale.merchandise }}</td>
-                            <td>{{ sale.number }}</td>
-                            <td>{{ sale.created | date:"MM/dd/yyyy" }}</td>
-                            <td>{{ sale.updated | date:"MM/dd/yyyy" }}</td>
+                        <tr *ngFor="let info of stockInfos">
+                            <td>{{ info.id }}</td>
+                            <td>{{ info.shopID }}</td>
+                            <td>{{ info.merchandiseID }}</td>
+                            <td>{{ info.number }}</td>
+                            <td>{{ info.supplierID }}</td>
+                            <td>{{ info.created | date:"MM/dd/yyyy" }}</td>
+                            <td>{{ info.updated | date:"MM/dd/yyyy" }}</td>
                             <!-- <td>{{ customer.orderTotal | currency:'USD':'symbol' }}</td>
                             <td><a [routerLink]="['/customers',customer.id,'orders']">View Orders</a></td> -->
                         </tr>
@@ -37,4 +37,3 @@
         </div>
     </div>
   </div>
-</div>

@@ -4,7 +4,6 @@ import { Validators } from '@angular/forms';
 import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
 import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/containers/dynamic-form/dynamic-form.component';
 
-import { BarcodeValidator } from 'src/app/shared/validators/barcode_exist.directive';
 import { UserService } from 'src/app/core/services/user.service';
 import { ShopService } from 'src/app/core/services/shop.service';
 import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';

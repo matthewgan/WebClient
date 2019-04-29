@@ -1,19 +1,78 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { ICategory } from 'src/app/shared/interfaces/category.interface';
-import { MerchandiseCreateRequest } from 'src/app/shared/interfaces/merchandise.interface';
-import { CategoryService } from 'src/app/core/services/category.service';
+import { MerchandiseCreateRequest, IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
 import { Router } from '@angular/router';
 import { MerchandiseService } from 'src/app/core/services/merchandise.service';
+import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/containers/dynamic-form/dynamic-form.component';
+import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
+import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
 
 @Component({
   selector: 'app-merchandise-add',
   templateUrl: './merchandise-add.component.html',
   styleUrls: ['./merchandise-add.component.scss']
 })
-export class MerchandiseAddComponent implements OnInit {
+export class MerchandiseAddComponent implements OnInit, AfterViewInit {
 
-  categories: ICategory[] = [];
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  categories: ICategory[] = JSON.parse(sessionStorage.getItem('categories'));
+
+  config: FieldConfig[] = [
+    {
+      type: 'input',
+      label: 'Barcode',
+      name: 'merchandiseBarcode',
+      disabled: true,
+      value: this.getBarcode()
+    },
+    {
+      type: 'select',
+      label: 'Category',
+      name: 'categoryName',
+      options: [],
+      placeholder: 'Select a category',
+      validation: [Validators.required],
+      value: []
+    },
+    {
+      type: 'input',
+      label: 'Merchandise Name',
+      name: 'name',
+      validation: [Validators.required],
+    },
+    {
+      type: 'input',
+      label: 'Merchandise Brand',
+      name: 'brand',
+      validation: [Validators.required],
+    },
+    {
+      type: 'input',
+      label: 'Merchandise Scale',
+      name: 'scale',
+      validation: [Validators.required],
+    },
+    {
+      type: 'input',
+      label: 'Merchandise Factory',
+      name: 'factory',
+      validation: [Validators.required],
+    },
+    {
+      type: 'input',
+      label: 'Merchandise Unit',
+      name: 'unit',
+      validation: [Validators.required],
+    },
+    {
+      label: 'Submit',
+      name: 'submit',
+      type: 'button',
+    }
+  ];
+
   merchandise: MerchandiseCreateRequest = {
     code: '',
     barcode: '',
@@ -24,40 +83,63 @@ export class MerchandiseAddComponent implements OnInit {
     factory: '',
     unit: ''
   };
-
-
-  @ViewChild('merchandiseForm') merchandiseForm: NgForm;
+  temp: any;
 
   constructor(
-    private categoryService: CategoryService,
+    private cd: ChangeDetectorRef,
     private router: Router,
-    private merchandiseService: MerchandiseService
-  ) { }
+    private merchandiseService: MerchandiseService,
+    private growlService: GrowlerService
+    ) {}
 
-  ngOnInit() {
-    this.merchandise.barcode = localStorage.getItem('barcode');
-    this.getCategory();
+  ngOnInit() {}
+
+  ngAfterViewInit() {
+    this.form.config.find(x => x.name === 'categoryName').options = this.getCategoryNameList();
+    this.cd.detectChanges();
+    let previousValid = this.form.valid;
+    this.form.changes.subscribe(() => {
+      if (this.form.valid !== previousValid) {
+        previousValid = this.form.valid;
+        this.form.setDisabled('submit', !previousValid);
+      }
+    });
   }
 
-  getCategory() {
-    this.categoryService.list()
-      .subscribe(categories => {
-        this.categories = categories;
-      });
+  getBarcode() {
+    return '1234';
   }
 
-  cancel(event: Event) {
-    event.preventDefault();
-    this.router.navigate(['/stock/in']);
+  getCategoryNameList() {
+    return this.categories.map(x => x.name);
   }
 
-  submit() {
-    console.log(this.merchandise);
+  onSubmit() {
+    this.temp = this.form.value;
+    this.setValue();
     this.merchandiseService.add(this.merchandise)
-      .subscribe((createdMerchandise: MerchandiseCreateRequest) => {
-        this.merchandiseForm.form.markAsPristine();
-        this.router.navigate(['/stock/in']);
+      .subscribe((createdMerchandise: IMerchandiseInfo) => {
+        if (createdMerchandise) {
+          this.growlService.growl('添加成功', GrowlerMessageType.Success);
+          this.router.navigate(['/stock/in']);
+        } else {
+          this.growlService.growl('添加失败', GrowlerMessageType.Danger);
+        }
       });
   }
+  setValue() {
+    this.merchandise.barcode = this.getBarcode();
+    this.merchandise.name = this.temp.name;
+    this.merchandise.brand = this.temp.brand;
+    this.merchandise.scale = this.temp.scale;
+    this.merchandise.factory = this.temp.factory;
+    this.merchandise.unit = this.temp.unit;
+    this.merchandise.categoryID = this.getCategoryID();
+  }
+
+  getCategoryID() {
+    return this.categories.find(x => x.name === this.temp.categoryName).id;
+  }
+
 
 }

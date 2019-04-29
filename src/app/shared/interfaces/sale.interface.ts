@@ -1,5 +1,6 @@
 export interface ISaleInfo {
     id: number;
+    number: number;
     shop: number;
     merchandise: number;
     created: string;
