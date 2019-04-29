@@ -23,7 +23,7 @@
                       <tr *ngFor="let store of stores">
                           <!-- <td><img src="assets/images/{{ customer.gender | lowercase }}.png"
                                   class="grid-image" alt="Customer Image" /></td> -->
-                          <td><a [routerLink]="['/stores']">{{ store.name }}</a></td>
+                          <td><a [routerLink]="['/stock/shop', store.id]">{{ store.name }}</a></td>
                           <td>{{ store.city }}</td>
                           <td>{{ store.size }}</td>
                           <td>{{ store.locationDetail }}</td>
