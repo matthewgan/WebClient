@@ -2,6 +2,8 @@ import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
+import { UserService } from 'src/app/core/services/user.service';
+import { EventBusService, Events } from 'src/app/core/services/event-bus.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -17,7 +19,13 @@ export class SidebarComponent implements OnInit {
 
     @Output() collapsedEvent = new EventEmitter<boolean>();
 
-    constructor(private translate: TranslateService, public router: Router, private authenticationService: AuthenticationService) {
+    constructor(
+        private translate: TranslateService,
+        public router: Router,
+        private authenticationService: AuthenticationService,
+        private userService: UserService,
+        private eventBus: EventBusService,
+        ) {
         this.router.events.subscribe(val => {
             if (
                 val instanceof NavigationEnd &&
@@ -34,7 +42,9 @@ export class SidebarComponent implements OnInit {
         this.collapsed = false;
         this.showMenu = '';
         this.pushRightClass = 'push-right';
-        this.current_user = localStorage.getItem('currentUser');
+        this.eventBus.on(Events.UserChanged, (user => this.current_user = user.username));
+
+        this.userService.getUserFromEvent();
     }
 
 
@@ -48,7 +58,7 @@ export class SidebarComponent implements OnInit {
         } else {
             this.showMenu = element;
         }
-        //this.router.navigate([element]);
+        // this.router.navigate([element]);
     }
 
     toggleCollapsed() {

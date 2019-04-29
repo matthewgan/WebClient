@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { ISaleInfo, ISalePagination } from 'src/app/shared/interfaces/sale.interface';
 import { environment } from 'src/environments/environment';
+import { Cacheable } from 'ngx-cacheable';
 
 
 @Injectable()
@@ -12,6 +13,7 @@ export class SaleService {
 
     constructor(private http: HttpClient) {}
 
+    @Cacheable()
     listAllSaleRecords() {
         return this.http.get<ISalePagination>(this.sale_url);
     }

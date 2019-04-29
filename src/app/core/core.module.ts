@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { EnsureModuleLoadedOnceGuard } from './ensure-module-loaded-once.guard';
 import { GrowlerModule } from './growler/growler.module';
+import { EventBusService } from './services/event-bus.service';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { ShopService } from './services/shop.service';
 import { UserService } from './services/user.service';
@@ -33,6 +34,7 @@ import { InventoryService } from './services/inventory.service';
         SupplierService,
         MerchandiseService,
         InventoryService,
+        EventBusService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: HttpConfigInterceptor,

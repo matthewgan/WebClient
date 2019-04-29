@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { MerchandiseQuery, IMerchandiseInfo, MerchandiseCreateRequest } from 'src/app/shared/interfaces/merchandise.interface';
 import { environment } from 'src/environments/environment';
+import { Cacheable } from 'ngx-cacheable';
 
 @Injectable()
 export class MerchandiseService {
@@ -11,6 +12,7 @@ export class MerchandiseService {
 
     constructor(private http: HttpClient) {}
 
+    @Cacheable()
     getInfo(info: MerchandiseQuery) {
         return this.http.post<IMerchandiseInfo[]>(this.merchandise_url + 'fast_query/', info);
     }

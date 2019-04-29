@@ -1,23 +1,29 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Validators } from '@angular/forms';
 
 import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
 import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/containers/dynamic-form/dynamic-form.component';
-import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
-import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
 
 import { BarcodeValidator } from 'src/app/shared/validators/barcode_exist.directive';
+import { UserService } from 'src/app/core/services/user.service';
+import { ShopService } from 'src/app/core/services/shop.service';
+import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
+import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
+import { EventBusService, Events } from 'src/app/core/services/event-bus.service';
+import { IMerchandiseInfo, MerchandiseQuery } from 'src/app/shared/interfaces/merchandise.interface';
+import { MerchandiseService } from 'src/app/core/services/merchandise.service';
 
 @Component({
   selector: 'app-stock-transfer',
   templateUrl: './stock-transfer.component.html',
   styleUrls: ['./stock-transfer.component.scss']
 })
-export class StockTransferComponent implements OnInit, AfterViewInit {
+export class StockTransferComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  shops: IShopInfo[] = JSON.parse(sessionStorage.getItem('shops'));
-  user: IUserInfo = JSON.parse(sessionStorage.getItem('user'));
+  shops: IShopInfo[];
+  merchandises: IMerchandiseInfo[];
+  current_user: IUserInfo;
 
   config: FieldConfig[] = [
     {
@@ -25,7 +31,19 @@ export class StockTransferComponent implements OnInit, AfterViewInit {
       label: 'Merchandise',
       name: 'merchandiseBarcode',
       placeholder: 'Input barcode of the merchandise',
-      validation: [Validators.required, BarcodeValidator],
+      validation: [
+        Validators.required,
+        Validators.pattern('[0-9]{13}')
+      ],
+    },
+    {
+      type: 'select',
+      label: 'Select Merchandise',
+      name: 'merchandiseSelected',
+      placeholder: 'Unlock when multiply merchandises found in the database',
+      options: [],
+      disabled: true,
+      value: []
     },
     {
       type: 'select',
@@ -49,54 +67,101 @@ export class StockTransferComponent implements OnInit, AfterViewInit {
       type: 'input',
       label: 'number',
       name: 'number',
-      validation: [Validators.required],
+      validation: [Validators.required, Validators.min(0)],
+      value: 0
     },
     {
       type: 'input',
       label: 'operator',
       name: 'operator',
-      disabled: true,
-      value: this.getCurrentUserName(),
+      disabled: false,
+      validation: [Validators.required],
+      value: '',
     },
     {
       label: 'Submit',
       name: 'submit',
-      type: 'button'
+      type: 'button',
+      disabled: true
     }
   ];
 
-  shopNameList: string[];
-  shopIDList: number[];
-
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(
+    private userService: UserService,
+    private shopService: ShopService,
+    private eventBus: EventBusService,
+    private merchandiseService: MerchandiseService,
+    // private cd: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
+    // this.eventBus.on(Events.UserChanged, (user => {
+    //   this.current_user = user;
+    //   this.updateFormOperatorValue();
+    // }));
+    // this.eventBus.on(Events.ShopListUpdated, (shops => this.shops = shops));
+
+    // this.userService.getUserFromEvent();
+    // this.shopService.getShopListFromEvent();
+  }
+
+  ngOnDestroy() {
 
   }
 
-  ngAfterViewInit() {
+  updateFormOperatorValue() {
+    this.form.setValue('operator', this.current_user.username);
+    this.form.setDisabled('operator', true);
+  }
+
+  updateFormShopOptions() {
     this.form.config.find(x => x.name === 'from_shop').options = this.getShopNameList();
     this.form.config.find(x => x.name === 'to_shop').options = this.getShopNameList();
-    this.cd.detectChanges();
-    let previousValid = this.form.valid;
-    this.form.changes.subscribe(() => {
-      if (this.form.valid !== previousValid) {
-        previousValid = this.form.valid;
-        this.form.setDisabled('submit', !previousValid);
-      }
-    });
-  }
-
-  getShopIDList() {
-    return this.shops.map(t => t.id);
+    // this.cd.detectChanges();
   }
 
   getShopNameList() {
     return this.shops.map(x => x.name);
   }
 
-  getCurrentUserName() {
-    return this.user.username;
+  ngAfterViewInit() {
+    // this.form.config.find(x => x.name === 'from_shop').options = this.getShopNameList();
+    // this.form.config.find(x => x.name === 'to_shop').options = this.getShopNameList();
+    // this.cd.detectChanges();
+    // let previousValid = this.form.valid;
+    // this.form.changes.subscribe(() => {
+    //   if (this.form.valid !== previousValid) {
+    //     previousValid = this.form.valid;
+    //     this.form.setDisabled('submit', !previousValid);
+    //   }
+    // });
+
+    this.eventBus.on(Events.UserChanged, (user => {
+      this.current_user = user;
+      this.updateFormOperatorValue();
+    }));
+    this.eventBus.on(Events.ShopListUpdated, (shops => {
+      this.shops = shops;
+      this.updateFormShopOptions();
+    }));
+
+    this.userService.getUserFromEvent();
+    this.shopService.getShopListFromEvent();
+
+
+
+    this.form.changes.subscribe(() => {
+
+      const barcode = this.form.form.controls['merchandiseBarcode'];
+
+      if (barcode.valid) {
+        this.merchandiseService.getInfo(new MerchandiseQuery());
+      }
+
+      if (this.form.valid === true) {
+        this.form.setDisabled('submit', false);
+      }
+    });
   }
 
   onSubmit(value: {[name: string]: any}) {
