@@ -8,6 +8,13 @@ import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/contai
 import { ISupplier } from 'src/app/shared/interfaces/supplier.interface';
 import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
 import { Validators } from '@angular/forms';
+import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
+import { Router } from '@angular/router';
+import { InventoryService } from 'src/app/core/services/inventory.service';
+import { EventBusService, Events } from 'src/app/core/services/event-bus.service';
+import { UserService } from 'src/app/core/services/user.service';
+import { ShopService } from 'src/app/core/services/shop.service';
+import { SupplierService } from 'src/app/core/services/supplier.service';
 
 @Component({
   selector: 'app-stock-out',
@@ -26,7 +33,7 @@ export class StockOutComponent implements OnInit, AfterViewInit {
     {
       type: 'select',
       label: 'Shop',
-      name: 'shopName',
+      name: 'shop',
       options: [],
       placeholder: 'Select a shop',
       validation: [Validators.required],
@@ -37,7 +44,7 @@ export class StockOutComponent implements OnInit, AfterViewInit {
       label: 'Merchandise',
       name: 'merchandiseBarcode',
       placeholder: 'Input barcode of the merchandise',
-      validation: [Validators.required],
+      validation: [Validators.required, Validators.pattern('[0-9]{13}')],
     },
     {
       type: 'select',
@@ -60,12 +67,13 @@ export class StockOutComponent implements OnInit, AfterViewInit {
       label: 'operator',
       name: 'operator',
       disabled: true,
-      value: this.getCurrentUserName(),
+      value: '',
     },
     {
       label: 'Submit',
       name: 'submit',
       type: 'button',
+      disabled: true
     }
   ];
 
@@ -84,25 +92,60 @@ export class StockOutComponent implements OnInit, AfterViewInit {
 
   constructor(
     private cd: ChangeDetectorRef,
-    private merchandiseService: MerchandiseService    ) {}
+    private merchandiseService: MerchandiseService,
+    private growlService: GrowlerService,
+    private router: Router,
+    private inventoryService: InventoryService,
+    private eventBus: EventBusService,
+    private userService: UserService,
+    private shopService: ShopService,
+    private supplierService: SupplierService
+    ) {}
 
   ngOnInit() {}
 
   ngAfterViewInit() {
-    // this.form.config.find(x => x.name === 'shopName').options = this.getShopNameList();
-    // this.form.config.find(x => x.name === 'merchandiseName').options = this.getMerchandiseNameList();
-    // this.cd.detectChanges();
-    let previousValid = this.form.valid;
+
+    // Subscription to events provided by all the services
+    this.eventBus.on(Events.UserChanged, (user => {
+      this.user = user;
+      this.updateFormOperatorValue();
+    }));
+    this.eventBus.on(Events.ShopListUpdated, (shops => {
+      this.shops = shops;
+      this.updateFormShopOptions();
+    }));
+    this.eventBus.on(Events.SupplierListUpdated, (suppliers => {
+      this.suppliers = suppliers;
+      this.updateFormSupplierOptions();
+    }));
+
+    // call the service to make sure emit events
+    this.userService.getUserFromEvent();
+    this.shopService.getShopListFromEvent();
+    this.supplierService.getSupplierListFromEvent();
+
     this.form.changes.subscribe(() => {
-      if (this.form.valid !== previousValid) {
-        previousValid = this.form.valid;
-        this.form.setDisabled('submit', !previousValid);
+
+      if (this.form.valid === true) {
+        this.form.setDisabled('submit', false);
+      } else {
+        this.form.setDisabled('submit', false);
       }
     });
   }
 
-  getCurrentUserName() {
-    return this.user.username;
+  updateFormOperatorValue() {
+    this.form.setValue('operator', this.user.username);
+    this.form.setDisabled('operator', true);
+  }
+
+  updateFormShopOptions() {
+    this.form.config.find(x => x.name === 'shop').options = this.getShopNameList();
+  }
+
+  updateFormSupplierOptions() {
+    this.form.config.find(x => x.name === 'supplier').options = this.getSupplierNameList();
   }
 
   getShopNameList() {
@@ -118,14 +161,24 @@ export class StockOutComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    this.temp = this.form.value;
     this.setValue();
+    this.inventoryService.outStock(this.stockOut)
+      .subscribe((res: StockOutRequest) => {
+        if (res) {
+          this.growlService.growl('添加成功', GrowlerMessageType.Success);
+          this.router.navigate(['/stock/in']);
+        } else {
+          this.growlService.growl('添加失败', GrowlerMessageType.Warning);
+        }
+      },
+      (err: any) => this.growlService.growl('请正确填写所有位置', GrowlerMessageType.Danger));
   }
 
   setValue() {
-    this.stockOut.shopID = this.getShopID();
-    this.stockOut.merchandiseID = this.getMerchandiseID();
-    this.stockOut.number = this.temp.number;
+    this.stockOut.shopID = this.shops.find(s => s.name === this.form.value.shop).id;
+    // this.stockOut.merchandiseID = this.merchandises.find(m => m.name === this.form.value.merchandiseName).id;
+    this.stockOut.number = this.form.value.number;
+    // this.stockOut.supplierID = this.suppliers.find(sp => sp.companyName === this.form.value.supplier).id;
     this.stockOut.operator = this.user.pk;
   }
 
@@ -136,11 +189,11 @@ export class StockOutComponent implements OnInit, AfterViewInit {
   //     });
   //   return this.merchandises.map(m => m.name);
   // }
-  getShopID() {
+/*   getShopID() {
     return this.shops.find(x => x.name === this.temp.shopName).id;
   }
 
   getMerchandiseID() {
     return this.merchandises.find(x => x.name === this.temp.merchandiseName).id;
-  }
+  } */
 }

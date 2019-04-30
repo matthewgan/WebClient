@@ -124,11 +124,11 @@ export class StockTransferComponent implements AfterViewInit {
   }
 
   getShopNameList() {
-    return this.shops.map(x => JSON.stringify(x));
+    return this.shops.map(x => x.name);
   }
 
   getMerchandiseNameList() {
-    return this.merchandises.map(x => JSON.stringify(x));
+    return this.merchandises.map(x => x.name);
   }
 
   ngAfterViewInit() {
@@ -162,7 +162,7 @@ export class StockTransferComponent implements AfterViewInit {
       if (this.form.valid === true) {
         this.form.setDisabled('submit', false);
       } else {
-        this.form.setDisabled('submit', true);
+        this.form.setDisabled('submit', false);
       }
     });
   }

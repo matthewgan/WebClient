@@ -135,7 +135,7 @@ export class StockInComponent implements OnInit, AfterViewInit {
       if (this.form.valid === true) {
         this.form.setDisabled('submit', false);
       } else {
-        this.form.setDisabled('submit', true);
+        this.form.setDisabled('submit', false);
       }
     });
   }
@@ -170,36 +170,36 @@ export class StockInComponent implements OnInit, AfterViewInit {
   // }
 
   onSubmit() {
-    this.temp = this.form.value;
-    // this.setValue();
+    this.setValue();
     this.inventoryService.inStock(this.stockIn)
       .subscribe((res: IStockInRequest) => {
         if (res) {
           this.growlService.growl('添加成功', GrowlerMessageType.Success);
           this.router.navigate(['/stock/in']);
         } else {
-          this.growlService.growl('添加失败', GrowlerMessageType.Danger);
+          this.growlService.growl('添加失败', GrowlerMessageType.Warning);
         }
-      });
+      },
+      (err: any) => this.growlService.growl('请正确填写所有位置', GrowlerMessageType.Danger));
   }
 
-  // setValue() {
-  //   this.stockIn.shopID = this.getShopID();
-  //   this.stockIn.merchandiseID = this.getMerchandiseID();
-  //   this.stockIn.number = this.temp.number;
-  //   this.stockIn.supplierID = this.getSupplierID();
-  //   this.stockIn.operator = this.user.pk;
-  // }
+  setValue() {
+    this.stockIn.shopID = this.shops.find(s => s.name === this.form.value.shop).id;
+    // this.stockIn.merchandiseID = this.merchandises.find(m => m.name === this.form.value.merchandiseName).id;
+    this.stockIn.number = this.form.value.number;
+    this.stockIn.supplierID = this.suppliers.find(sp => sp.companyName === this.form.value.supplier).id;
+    this.stockIn.operator = this.user.pk;
+  }
 
-  // getShopID() {
-  //   return this.shops.find(x => x.name === this.temp.shopName).id;
-  // }
+/*   getShopID(shopName: any) {
+    return this.shops.find(x => x.name === shopName).id;
+  }
 
-  // getMerchandiseID() {
-  //   return this.merchandises.find(x => x.name === this.temp.merchandiseName).id;
-  // }
+  getMerchandiseID(merchandiseName: any) {
+    return this.merchandises.find(x => x.name === merchandiseName).id;
+  }
 
-  // getSupplierID() {
-  //   return this.suppliers.find(x => x.companyName === this.temp.supplierName).id;
-  // }
+  getSupplierID(supplierName: any) {
+    return this.suppliers.find(x => x.companyName === supplierName).id;
+  } */
 }
