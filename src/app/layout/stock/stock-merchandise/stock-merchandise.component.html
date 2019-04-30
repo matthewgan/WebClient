@@ -16,12 +16,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let info of stockInfos">
+                        <tr *ngFor="let info of displayInfos">
                             <td>{{ info.id }}</td>
-                            <td>{{ info.shopID }}</td>
+                            <td>{{ info.shopName }}</td>
                             <td>{{ info.merchandiseID }}</td>
                             <td>{{ info.number }}</td>
-                            <td>{{ info.supplierID }}</td>
+                            <td>{{ info.supplierName }}</td>
                             <td>{{ info.created | date:"MM/dd/yyyy" }}</td>
                             <td>{{ info.updated | date:"MM/dd/yyyy" }}</td>
                             <!-- <td>{{ customer.orderTotal | currency:'USD':'symbol' }}</td>

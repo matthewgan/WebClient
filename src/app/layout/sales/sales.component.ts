@@ -15,7 +15,7 @@ import { routerTransition } from 'src/app/router.animations';
 })
 export class SalesComponent implements OnInit {
 
-  sales: ISaleInfo[];
+  sales: ISaleInfo[] = [];
   displaySales: any[];
   shops: IShopInfo[];
   merchandises: IMerchandiseInfo[];
@@ -27,30 +27,39 @@ export class SalesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getShops();
     this.getSales();
-    this.displaySales = this.setValue();
   }
   getSales() {
     this.saleService.listAllSaleRecords()
       .subscribe((res: ISalePagination) => {
         if (res) {
           this.sales = res.results;
+          this.displaySales = this.setValue();
         } else {
           console.log('unable to get sale records');
         }
       });
   }
 
-  setValue(): any[] {
+  setValue() {
     return this.sales.map((sale: ISaleInfo) => {
-      return {id: sale.id, number: sale.number, created: sale.created, updated: sale.updated, shopName: this.getShopName(sale.shop)};
+      return {
+        id: sale.id,
+        number: sale.number,
+        created: sale.created,
+        updated: sale.updated,
+        shopName: this.getShopName(sale.shop)
+      };
     });
   }
 
-  getShopName(shopID: number) {
+  getShops() {
     this.shopService.list().subscribe(shops => {
       this.shops = shops;
     });
+  }
+  getShopName(shopID: number) {
     return this.shops.find(x => x.id === shopID).name;
   }
 
