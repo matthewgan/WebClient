@@ -7,7 +7,6 @@ import { DynamicFormComponent } from './containers/dynamic-form/dynamic-form.com
 import { FormButtonComponent } from './components/form-button/form-button.component';
 import { FormInputComponent } from './components/form-input/form-input.component';
 import { FormSelectComponent } from './components/form-select/form-select.component';
-import { FormSearchComponent } from './components/form-search/form-search.component';
 
 @NgModule({
   imports: [
@@ -19,8 +18,7 @@ import { FormSearchComponent } from './components/form-search/form-search.compon
     DynamicFormComponent,
     FormButtonComponent,
     FormInputComponent,
-    FormSelectComponent,
-    FormSearchComponent
+    FormSelectComponent
   ],
   exports: [
     DynamicFormComponent
@@ -28,8 +26,7 @@ import { FormSearchComponent } from './components/form-search/form-search.compon
   entryComponents: [
     FormButtonComponent,
     FormInputComponent,
-    FormSelectComponent,
-    FormSearchComponent
+    FormSelectComponent
   ]
 })
 export class DynamicFormModule {}

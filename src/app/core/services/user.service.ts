@@ -4,46 +4,29 @@ import { first } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { IUserInfo } from '../../shared/interfaces/user.interface';
+import { Cacheable } from 'ngx-cacheable';
+import { EventBusService, Events, EmitEvent } from './event-bus.service';
 
 @Injectable()
 export class UserService {
 
-    isSaved = false;
-    user: IUserInfo;
-
-    constructor(private http: HttpClient) { }
+    constructor(
+      private http: HttpClient,
+      private eventBus: EventBusService,
+    ) { }
 
     user_url = environment.apiUrl + '/rest_auth/user/';
+    user: IUserInfo;
 
-    /* getUserInfo() {
-        this.http.get<IUserInfo>(this.user_url).pipe(first()).subscribe(
-            userinfo => {
-                this.saveUserInfo(userinfo);
-            }
-        );
-    }
-
-    saveUserInfo(userinfo: IUserInfo) {
-        this.user = userinfo;
-        this.isSaved = true;
-    }
-
-    getUserId(): number {
-        if (!this.isSaved) {
-            this.getUserInfo();
-        }
-
-        return this.user.pk;
-    }
-
-    getUserName(): string {
-        if (!this.isSaved) {
-            this.getUserInfo();
-        }
-
-        return this.user.username;
-    } */
+    @Cacheable()
     getUserInfo() {
       return this.http.get<IUserInfo>(this.user_url);
+    }
+
+    getUserFromEvent() {
+      this.getUserInfo().subscribe((user: IUserInfo) => {
+        this.user = user;
+        this.eventBus.emit(new EmitEvent(Events.UserChanged, this.user));
+      });
     }
 }

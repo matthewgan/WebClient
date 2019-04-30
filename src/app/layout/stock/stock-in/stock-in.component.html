@@ -50,11 +50,12 @@
       </div>
 </div> -->
 <div class="container">
-    <dynamic-form
-      [config]="config"
-      #form="dynamicForm"
-      (submit)="onSubmit($event)">
-    </dynamic-form>
-    {{ form.valid }}
-    {{ form.value | json }}
-  </div>
+  <dynamic-form
+    [config]="config"
+    #form="dynamicForm"
+    (submit)="onSubmit($event)">
+  </dynamic-form>
+  {{ form.valid }}
+  {{ form.value | json }}
+  {{ merchandises }}
+</div>
