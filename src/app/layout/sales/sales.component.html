@@ -17,10 +17,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let sale of sales">
+                        <tr *ngFor="let sale of displaySales">
                             <td>{{ sale.id }}</td>
-                            <td>{{ sale.shop }}</td>
-                            <td>{{ sale.merchandise }}</td>
+                            <td>{{ sale.shopName }}</td>
+                            <td>{{ sale.merchandiseName }}</td>
                             <td>{{ sale.number }}</td>
                             <td>{{ sale.created | date:"MM/dd/yyyy" }}</td>
                             <td>{{ sale.updated | date:"MM/dd/yyyy" }}</td>
