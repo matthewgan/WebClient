@@ -12,7 +12,7 @@ export class GrowlerComponent implements OnInit {
   private growlCount = 0;
   growls: Growl[] = [];
 
-  @Input() position = 'bottom-right';
+  @Input() position = 'bottom-center';
   @Input() timeout = 3000;
 
   constructor(private growlerService: GrowlerService) {

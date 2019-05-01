@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import {
     IStockInfo,
@@ -17,19 +17,19 @@ export class InventoryService {
     constructor(private http: HttpClient) {}
 
     inStock(record: IStockInRequest) {
-        return this.http.post(this.stock_url + 'in/', record);
+        return this.http.post(this.stock_url + 'in/', record, { observe: 'response' });
     }
 
     outStock(record: StockOutRequest) {
-        return this.http.post(this.stock_url + 'out/', record);
+        return this.http.post(this.stock_url + 'out/', record, { observe: 'response' });
     }
 
     queryStock(info: IStockQuery) {
-        return this.http.post(this.stock_url + 'query/', info);
+        return this.http.post(this.stock_url + 'query/', info, { observe: 'response' });
     }
 
     transferStock(info: StockTransferRequest) {
-        return this.http.post(this.stock_url + 'transfer/', info);
+        return this.http.post(this.stock_url + 'transfer/', info, { observe: 'response' });
     }
 
     queryStockByShop(shop_id: number) {

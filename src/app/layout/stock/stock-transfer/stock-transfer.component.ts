@@ -1,8 +1,11 @@
-import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
 import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/containers/dynamic-form/dynamic-form.component';
+
+import { GrowlerMessageType, GrowlerService } from 'src/app/core/growler/growler.service';
 
 import { UserService } from 'src/app/core/services/user.service';
 import { ShopService } from 'src/app/core/services/shop.service';
@@ -13,7 +16,6 @@ import { EventBusService, Events } from 'src/app/core/services/event-bus.service
 import { IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
 import { MerchandiseService } from 'src/app/core/services/merchandise.service';
 import { InventoryService } from 'src/app/core/services/inventory.service';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stock-transfer',
@@ -52,6 +54,7 @@ export class StockTransferComponent implements AfterViewInit {
       name: 'merchandiseSelected',
       options: [],
       disabled: true,
+      validation: [Validators.required],
     },
     {
       type: 'select',
@@ -98,6 +101,8 @@ export class StockTransferComponent implements AfterViewInit {
     private eventBus: EventBusService,
     private merchandiseService: MerchandiseService,
     private inventoryService: InventoryService,
+    private growler: GrowlerService,
+    private router: Router,
     // private cd: ChangeDetectorRef,
   ) {}
 
@@ -153,7 +158,7 @@ export class StockTransferComponent implements AfterViewInit {
       const barcode = this.form.form.controls['merchandiseBarcode'];
       if (barcode.valid) {
         if (!this.isFound) {
-          this.merchandiseService.getInfoByBarcodeFromEvent(barcode.value);
+          this.merchandiseService.getInfoByBarcodeFromEvent(barcode.value.trim());
         }
       } else {
         this.clearFormMerchandiseOptions();
@@ -168,28 +173,22 @@ export class StockTransferComponent implements AfterViewInit {
   }
 
   onSubmit(value: {[name: string]: any}) {
-    console.log(value);
-    // console.log(this.shopService.getShopIdByName(value['from_shop'], this.shops));
-    // this.record.fromShop = this.shopService.getIdByName(value['from_shop'], this.shops);
-    // this.record.toShop = this.shopService.getIdByName(value['to_shop'], this.shops);
-    // this.record.operator = this.user.pk;
-    // this.record.merchandiseID = this.merchandiseService.getIdByName(value['merchandiseSelected'], this.merchandises);
+    // console.log(value);
     this.record.fromShop = JSON.parse(value['from_shop']).id;
     this.record.toShop = JSON.parse(value['to_shop']).id;
     this.record.operator = this.user.pk;
-    this.record.merchandiseID = JSON.parse(value['merchandiseSelected'].id);
+    this.record.merchandiseID = JSON.parse(value['merchandiseSelected']).id;
     this.record.number = value['number'];
 
-    this.inventoryService.transferStock(this.record).pipe(
-      map((res: Response) => {
-        if (res.status === 200) {
-
-        } else if (res.status === 204) {
-
-        } else {
-
+    this.inventoryService.transferStock(this.record).subscribe(
+      resp => {
+        if (resp.status === 204) {
+          console.log(resp.statusText);
+          console.log(resp.body);
+        } else if (resp.status === 200) {
+          console.log(resp);
         }
-      })
+      }
     );
   }
 }

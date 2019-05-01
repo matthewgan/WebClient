@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { MerchandiseQuery, IMerchandiseInfo, MerchandiseCreateRequest } from 'src/app/shared/interfaces/merchandise.interface';
 import { environment } from 'src/environments/environment';
-import { Cacheable } from 'ngx-cacheable';
 import { EventBusService, Events, EmitEvent } from './event-bus.service';
 
 @Injectable()
@@ -21,7 +20,7 @@ export class MerchandiseService {
     getInfoByBarcode(barcode: string) {
         const query = new MerchandiseQuery();
         query.barcode = barcode;
-        return this.http.post<IMerchandiseInfo[]>(this.merchandise_url + 'fast_query/', query);
+        return this.http.post(this.merchandise_url + 'fast_query/', query, {observe: 'response'});
     }
 
     add(merchandise: MerchandiseCreateRequest) {
@@ -34,10 +33,16 @@ export class MerchandiseService {
     }
 
     getInfoByBarcodeFromEvent(barcode: string) {
-        this.getInfoByBarcode(barcode).subscribe(merchandises => {
-            this.merchandises = merchandises;
-            this.eventBus.emit(new EmitEvent(Events.MerchandiseBarcodeFound, this.merchandises));
-        });
+        this.getInfoByBarcode(barcode).subscribe(
+            (response) => {
+                if (response.status === 200) {
+                    this.merchandises = <IMerchandiseInfo[]>response.body;
+                    this.eventBus.emit(new EmitEvent(Events.MerchandiseBarcodeFound, this.merchandises));
+                } else if (response.status === 204) {
+                    this.eventBus.emit(new EmitEvent(Events.MerchandiseBarcodeFound, 'NotFound'));
+                }
+            },
+        );
     }
 
     getInfoByIdFromEvent(id: string) {

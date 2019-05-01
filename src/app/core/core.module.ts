@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { EnsureModuleLoadedOnceGuard } from './ensure-module-loaded-once.guard';
 import { GrowlerModule } from './growler/growler.module';
+
 import { EventBusService } from './services/event-bus.service';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { ShopService } from './services/shop.service';

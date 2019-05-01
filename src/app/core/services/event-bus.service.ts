@@ -41,5 +41,6 @@ export enum Events {
   ShopSelected,
   SupplierSelected,
   MerchandiseBarcodeFound,
+  MerchandiseBarcodeNotFound,
   MerchandiseIdFound,
 }
