@@ -1,0 +1,6 @@
+<ngx-smart-modal #newMerchandise [identifier]="'newMerchandise'">
+  <h1>Create New Merchandise?</h1>
+  <p>Input barcode is not found in the database, do you want to create new merchandise with the barcode?</p>
+  <button (click)="onClickCreate()">Create</button>
+  <button (click)="newMerchandise.close()">Close</button>
+</ngx-smart-modal>

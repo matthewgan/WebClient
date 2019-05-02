@@ -6,7 +6,7 @@ import { DynamicFormComponent } from 'src/app/shared/modules/dynamic-form/contai
 import { FieldConfig } from 'src/app/shared/modules/dynamic-form/models/field-config.interface';
 
 import { GrowlerService, GrowlerMessageType } from 'src/app/core/growler/growler.service';
-import { ModalService, IModalContent } from 'src/app/core/modal/modal.service';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
 import { IUserInfo } from 'src/app/shared/interfaces/user.interface';
@@ -19,7 +19,6 @@ import { EventBusService, Events } from 'src/app/core/services/event-bus.service
 import { UserService } from 'src/app/core/services/user.service';
 import { ShopService } from 'src/app/core/services/shop.service';
 import { SupplierService } from 'src/app/core/services/supplier.service';
-
 
 @Component({
   selector: 'app-stock-in',
@@ -53,7 +52,8 @@ export class StockInComponent implements AfterViewInit {
       validation: [
         Validators.required,
         Validators.pattern('[0-9]{13}')
-      ]
+      ],
+      value: localStorage.getItem('barcode')
     },
     {
       type: 'select',
@@ -110,13 +110,13 @@ export class StockInComponent implements AfterViewInit {
     // private cd: ChangeDetectorRef,
     private merchandiseService: MerchandiseService,
     private growler: GrowlerService,
-    private modalService: ModalService,
     private router: Router,
     private inventoryService: InventoryService,
     private eventBus: EventBusService,
     private userService: UserService,
     private shopService: ShopService,
     private supplierService: SupplierService,
+    public modalService: NgxSmartModalService,
     ) {}
 
   updateFormMerchandiseOptions() {
@@ -183,13 +183,8 @@ export class StockInComponent implements AfterViewInit {
     this.eventBus.on(Events.MerchandiseBarcodeFound, (merchandises => {
       console.log(merchandises);
       if (merchandises === 'NotFound') {
-        const modalContent: IModalContent = {
-          header: 'Create New Merchandise?',
-          body: 'The barcode is not found, do you want to create a new item?',
-          cancelButtonText: 'Cancel',
-          OKButtonText: 'Create Merchandise'
-        };
-        const modal = this.modalService.show(modalContent);
+        // to do: create new merchandise modal
+        this.modalService.getModal('newMerchandise').open(true);
       } else {
         this.merchandises = merchandises;
         this.updateFormMerchandiseOptions();
@@ -207,6 +202,7 @@ export class StockInComponent implements AfterViewInit {
       if (barcode.valid) {
         if (!this.isFound) {
           this.merchandiseService.getInfoByBarcodeFromEvent(barcode.value.trim());
+          localStorage.setItem('barcode', barcode.value.trim());
         }
       } else {
         this.clearFormMerchandiseOptions();
@@ -215,12 +211,11 @@ export class StockInComponent implements AfterViewInit {
       if (this.form.valid === true) {
         this.form.setDisabled('submit', false);
       } else {
-        this.form.setDisabled('submit', false);
+        this.form.setDisabled('submit', true);
       }
     });
   }
 
-<<<<<<< HEAD
   onSubmit(value: {[name: string]: any}) {
     // this.temp = this.form.value;
     // this.setValue();
@@ -247,6 +242,7 @@ export class StockInComponent implements AfterViewInit {
         if (resp.status === 201) {
           console.log(resp.body);
           this.growler.growl('OK', GrowlerMessageType.Success);
+          localStorage.removeItem('barcode');
           this.form.form.reset();
         } else {
 
@@ -255,68 +251,4 @@ export class StockInComponent implements AfterViewInit {
     );
 
   }
-=======
-  updateFormOperatorValue() {
-    this.form.setValue('operator', this.user.username);
-    this.form.setDisabled('operator', true);
-  }
-
-  updateFormShopOptions() {
-    this.form.config.find(x => x.name === 'shop').options = this.getShopNameList();
-  }
-
-  updateFormSupplierOptions() {
-    this.form.config.find(x => x.name === 'supplier').options = this.getSupplierNameList();
-  }
-
-  getShopNameList() {
-    return this.shops.map(x => x.name);
-  }
-
-  getSupplierNameList() {
-    return this.suppliers.map(x => x.companyName);
-  }
-
-  // getMerchandiseNameList() {
-  //   this.merchandiseService.getInfo(this.merchandiseQuery)
-  //     .subscribe(merchandises => {
-  //       this.merchandises = merchandises;
-  //     });
-  //   return this.merchandises.map(m => m.name);
-  // }
-
-  onSubmit() {
-    this.setValue();
-    this.inventoryService.inStock(this.stockIn)
-      .subscribe((res: IStockInRequest) => {
-        if (res) {
-          this.growlService.growl('添加成功', GrowlerMessageType.Success);
-          this.router.navigate(['/stock/in']);
-        } else {
-          this.growlService.growl('添加失败', GrowlerMessageType.Warning);
-        }
-      },
-      (err: any) => this.growlService.growl('请正确填写所有位置', GrowlerMessageType.Danger));
-  }
-
-  setValue() {
-    this.stockIn.shopID = this.shops.find(s => s.name === this.form.value.shop).id;
-    // this.stockIn.merchandiseID = this.merchandises.find(m => m.name === this.form.value.merchandiseName).id;
-    this.stockIn.number = this.form.value.number;
-    this.stockIn.supplierID = this.suppliers.find(sp => sp.companyName === this.form.value.supplier).id;
-    this.stockIn.operator = this.user.pk;
-  }
-
-/*   getShopID(shopName: any) {
-    return this.shops.find(x => x.name === shopName).id;
-  }
-
-  getMerchandiseID(merchandiseName: any) {
-    return this.merchandises.find(x => x.name === merchandiseName).id;
-  }
-
-  getSupplierID(supplierName: any) {
-    return this.suppliers.find(x => x.companyName === supplierName).id;
-  } */
->>>>>>> 27a9c7678e25e6aa1b1fc2cacd57aef181e21f1c
 }

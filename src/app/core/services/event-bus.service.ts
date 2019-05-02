@@ -43,4 +43,5 @@ export enum Events {
   MerchandiseBarcodeFound,
   MerchandiseBarcodeNotFound,
   MerchandiseIdFound,
+  CategoryListUpdated,
 }

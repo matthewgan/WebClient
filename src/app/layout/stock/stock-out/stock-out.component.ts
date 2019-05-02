@@ -161,17 +161,17 @@ export class StockOutComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    this.setValue();
-    this.inventoryService.outStock(this.stockOut)
-      .subscribe((res: StockOutRequest) => {
-        if (res) {
-          this.growlService.growl('添加成功', GrowlerMessageType.Success);
-          this.router.navigate(['/stock/in']);
-        } else {
-          this.growlService.growl('添加失败', GrowlerMessageType.Warning);
-        }
-      },
-      (err: any) => this.growlService.growl('请正确填写所有位置', GrowlerMessageType.Danger));
+    // this.setValue();
+    // this.inventoryService.outStock(this.stockOut)
+    //   .subscribe((res: StockOutRequest) => {
+    //     if (res) {
+    //       this.growlService.growl('添加成功', GrowlerMessageType.Success);
+    //       this.router.navigate(['/stock/in']);
+    //     } else {
+    //       this.growlService.growl('添加失败', GrowlerMessageType.Warning);
+    //     }
+    //   },
+    //   (err: any) => this.growlService.growl('请正确填写所有位置', GrowlerMessageType.Danger));
   }
 
   setValue() {

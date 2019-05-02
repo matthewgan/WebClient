@@ -13,6 +13,8 @@ import { MerchandiseAddComponent } from './merchandise-add/merchandise-add.compo
 import { DynamicFormModule } from 'src/app/shared/modules/dynamic-form/dynamic-form.module';
 import { StockShopComponent } from './stock-shop/stock-shop.component';
 import { StockMerchandiseComponent } from './stock-merchandise/stock-merchandise.component';
+import { MerchandiseAddModalComponent } from './merchandise-add-modal/merchandise-add-modal.component';
+import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
 
 @NgModule({
   declarations: [
@@ -23,13 +25,17 @@ import { StockMerchandiseComponent } from './stock-merchandise/stock-merchandise
     MerchandiseAddComponent,
     StockQueryComponent,
     StockShopComponent,
-    StockMerchandiseComponent],
+    StockMerchandiseComponent,
+    MerchandiseAddModalComponent,
+  ],
   imports: [
     CommonModule,
     StockRoutingModule,
     PageHeaderModule,
     FormsModule,
-    DynamicFormModule
-  ]
+    DynamicFormModule,
+    NgxSmartModalModule.forRoot()
+  ],
+  providers: [NgxSmartModalService],
 })
 export class StockModule { }
