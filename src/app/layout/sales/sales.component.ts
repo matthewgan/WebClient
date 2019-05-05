@@ -6,6 +6,7 @@ import { MerchandiseService } from 'src/app/core/services/merchandise.service';
 import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
 import { IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
 import { routerTransition } from 'src/app/router.animations';
+import { EventBusService, Events } from 'src/app/core/services/event-bus.service';
 
 @Component({
   selector: 'app-sales',
@@ -15,59 +16,9 @@ import { routerTransition } from 'src/app/router.animations';
 })
 export class SalesComponent implements OnInit {
 
-  sales: ISaleInfo[] = [];
-  displaySales: any[];
-  shops: IShopInfo[];
-  merchandises: IMerchandiseInfo[];
+  constructor() { }
 
-  constructor(
-    private saleService: SaleService,
-    private shopService: ShopService,
-    private merchandiseService: MerchandiseService
-  ) { }
+  ngOnInit() { }
 
-  ngOnInit() {
-    this.getShops();
-    this.getSales();
-  }
-  getSales() {
-    this.saleService.listAllSaleRecords()
-      .subscribe((res: ISalePagination) => {
-        if (res) {
-          this.sales = res.results;
-          this.displaySales = this.setValue();
-        } else {
-          console.log('unable to get sale records');
-        }
-      });
-  }
-
-  setValue() {
-    return this.sales.map((sale: ISaleInfo) => {
-      return {
-        id: sale.id,
-        number: sale.number,
-        created: sale.created,
-        updated: sale.updated,
-        shopName: this.getShopName(sale.shop)
-      };
-    });
-  }
-
-  getShops() {
-    this.shopService.list().subscribe(shops => {
-      this.shops = shops;
-    });
-  }
-  getShopName(shopID: number) {
-    return this.shops.find(x => x.id === shopID).name;
-  }
-
-  /* getMerchandiseName(merchandiseID: number) {
-    this.merchandiseService.getInfo().subscribe(merchandises => {
-      this.merchandises = merchandises;
-    });
-    return this.merchandises.find(x => x.id === merchandiseID).name;
-  } */
 
 }

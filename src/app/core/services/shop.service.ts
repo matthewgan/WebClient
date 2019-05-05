@@ -6,7 +6,6 @@ import { Cacheable } from 'ngx-cacheable';
 import { IShopInfo, ShopCreateRequest } from 'src/app/shared/interfaces/shop.interface';
 import { environment } from 'src/environments/environment';
 import { EventBusService, Events, EmitEvent } from './event-bus.service';
-import { forEach } from '@angular/router/src/utils/collection';
 
 @Injectable()
 export class ShopService {
