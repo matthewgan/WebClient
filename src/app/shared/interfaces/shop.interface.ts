@@ -11,10 +11,9 @@ export interface IShopInfo {
     openingTime?: string;
 }
 
-export interface IShopCreateRequest {
+export class ShopCreateRequest {
     name: string;
     city: string;
-    locationDetail?: string;
-    size?: number;
-    capacity: number;
+    locationDetail: string;
+    size: number;
 }

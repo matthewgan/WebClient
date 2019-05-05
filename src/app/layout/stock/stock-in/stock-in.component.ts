@@ -217,17 +217,6 @@ export class StockInComponent implements AfterViewInit {
   }
 
   onSubmit(value: {[name: string]: any}) {
-    // this.temp = this.form.value;
-    // this.setValue();
-    // this.inventoryService.inStock(this.stockIn)
-    //   .subscribe((res: IStockInRequest) => {
-    //     if (res) {
-    //       this.growlService.growl('添加成功', GrowlerMessageType.Success);
-    //       this.router.navigate(['/stock/in']);
-    //     } else {
-    //       this.growlService.growl('添加失败', GrowlerMessageType.Danger);
-    //     }
-    //   });
 
     this.record.operator = this.user.pk;
     this.record.merchandiseID = JSON.parse(value['merchandiseSelected']).id;
