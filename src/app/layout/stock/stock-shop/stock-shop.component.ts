@@ -21,7 +21,6 @@ export class StockShopComponent implements OnInit {
   shops: IShopInfo[];
   suppliers: ISupplier[];
   merchandise: IMerchandiseInfo;
-  displayInfos: any[];
   constructor(
     private route: ActivatedRoute,
     private inventoryService: InventoryService,
@@ -61,31 +60,15 @@ export class StockShopComponent implements OnInit {
   }
 
   setDisplay() {
-    this.displayInfos = this.stockInfos.map(info => {
+    this.stockInfos.forEach(info => {
       this.merchandiseService.getInfoByIdFromEvent(info.merchandiseID.toString());
-      return {
-        id: info.id,
-        shopName: this.getShopName(info.shopID),
-        merchandiseID: info.merchandiseID,
-        merchandiseName: 'test',
-        number: info.number,
-        supplierName: this.getSupplierName(info.supplierID),
-        created: info.created,
-        updated: info.updated
-      };
+      info.shopName = this.shops.find(s => s.id === info.shopID).name;
+      info.supplierName = this.suppliers.find(sp => sp.id === info.supplierID).companyName;
     });
   }
 
-  getShopName(shopID: number) {
-    return this.shops.find(x => x.id === shopID).name;
-  }
-
-  getSupplierName(supplierID: number) {
-    return this.suppliers.find(x => x.id === supplierID).companyName;
-  }
-
   getMerchandiseName() {
-    this.displayInfos.forEach(res => {
+    this.stockInfos.forEach(res => {
       if (res.merchandiseID === this.merchandise.id) {
         res.merchandiseName = this.merchandise.name;
       }

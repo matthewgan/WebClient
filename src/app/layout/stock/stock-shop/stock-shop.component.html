@@ -16,7 +16,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let info of displayInfos">
+                        <tr *ngFor="let info of stockInfos">
                             <td>{{ info.id }}</td>
                             <td>{{ info.shopName }}</td>
                             <td><a [routerLink]="['/stock/merchandise', info.merchandiseID]">{{ info.merchandiseName }}</a></td>

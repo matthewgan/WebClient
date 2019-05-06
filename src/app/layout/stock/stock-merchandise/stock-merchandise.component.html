@@ -16,7 +16,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let info of displayInfos">
+                        <tr *ngFor="let info of stockInfos.reverse()">
                             <td>{{ info.id }}</td>
                             <td>{{ info.shopName }}</td>
                             <td>{{ info.merchandiseName }}</td>

@@ -20,7 +20,6 @@ export class StockMerchandiseComponent implements OnInit {
   stockInfos: IStockInfo[];
   shops: IShopInfo[];
   suppliers: ISupplier[];
-  displayInfos: any[];
   merchandise: IMerchandiseInfo;
   constructor(
     private route: ActivatedRoute,
@@ -60,31 +59,18 @@ export class StockMerchandiseComponent implements OnInit {
   }
 
   setDisplay() {
-    this.displayInfos = this.stockInfos.reverse().map(info => {
+    this.stockInfos.forEach(info => {
       this.merchandiseService.getInfoByIdFromEvent(info.merchandiseID.toString());
-      return {
-        id: info.id,
-        shopName: this.getShopName(info.shopID),
-        number: info.number,
-        supplierName: this.getSupplierName(info.supplierID),
-        created: info.created,
-        updated: info.updated,
-        merchandiseName: 'test'
-      };
+      info.shopName = this.shops.find(s => s.id === info.shopID).name;
+      info.supplierName = this.suppliers.find(sp => sp.id === info.supplierID).companyName;
     });
   }
 
-  getShopName(shopID: number) {
-    return this.shops.find(x => x.id === shopID).name;
-  }
-
-  getSupplierName(supplierID: number) {
-    return this.suppliers.find(x => x.id === supplierID).companyName;
-  }
-
   getMerchandiseName() {
-    this.displayInfos.forEach( res => {
-      res.merchandiseName = this.merchandise.name;
+    this.stockInfos.forEach(res => {
+      if (res.merchandiseID === this.merchandise.id) {
+        res.merchandiseName = this.merchandise.name;
+      }
     });
   }
 

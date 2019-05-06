@@ -6,6 +6,9 @@ export interface IStockInfo {
     supplierID: number;
     created: string;
     updated: string;
+    shopName?: string;
+    supplierName?: string;
+    merchandiseName?: string;
 }
 
 export interface IStockQuery {

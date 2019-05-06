@@ -15,7 +15,6 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class SalesShopComponent implements OnInit {
 
-  displaySales: any[];
   shops: IShopInfo[];
   shopSaleRecords: ISaleInfo[];
   merchandise: IMerchandiseInfo;
@@ -52,21 +51,14 @@ export class SalesShopComponent implements OnInit {
   }
 
   setDisplay() {
-    this.displaySales = this.shopSaleRecords.map(record => {
+    this.shopSaleRecords.forEach(record => {
       this.merchandiseService.getInfoByIdFromEvent(record.merchandise.toString());
-      return {
-        id: record.id,
-        number: record.number,
-        created: record.created,
-        updated: record.updated,
-        shopName: this.shops.find(x => x.id === record.shop).name,
-        merchandiseId: record.merchandise
-      };
+      record.shopName = this.shops.find(x => x.id === record.shop).name;
     });
   }
   setMerchandiseName() {
-    this.displaySales.forEach( res => {
-      if (res.merchandiseId === this.merchandise.id) {
+    this.shopSaleRecords.forEach( res => {
+      if (res.merchandise === this.merchandise.id) {
         res.merchandiseName = this.merchandise.name;
       }
     });
