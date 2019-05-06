@@ -5,6 +5,8 @@ export interface ISaleInfo {
     merchandise: number;
     created: string;
     updated: string;
+    shopName?: string;
+    merchandiseName?: string;
 }
 
 export interface ISalePagination {

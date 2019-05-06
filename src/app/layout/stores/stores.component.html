@@ -1,40 +1,16 @@
 <div [@routerTransition]>
   <app-page-header [heading]="'Stores'" [icon]="'fas fa-store'"></app-page-header>
   <div class="container">
-    <!-- <header>
-        <h3>
-            <span class="glyphicon glyphicon-user"></span>
-            {{ title }}
-        </h3>
-    </header>
-    <br /> -->
     <div class="row">
         <div class="col-md-10">
             <div class="navbar">
                 <ul class="nav navbar-nav">
                     <li class="toolbar-item">
                         <a routerLink="/add">
-                            <span class="fas fa-plus"></span> New Store
+                            <span class="fas fa-plus"></span> 新增店铺
                         </a>
                     </li>
-                    <!-- <li class="toolbar-item">
-                        <a (click)="changeDisplayMode(displayModeEnum.Card)" [class.active]="displayMode === displayModeEnum.Card">
-                            <span class="glyphicon glyphicon-th-large"></span> Card View
-                        </a>
-                    </li>
-                    <li class="toolbar-item">
-                        <a (click)="changeDisplayMode(displayModeEnum.Grid)" [class.active]="displayMode === displayModeEnum.Grid">
-                            <span class="glyphicon glyphicon-align-justify"></span> List View
-                        </a>
-                    </li>
-                    <li class="toolbar-item">
-                        <a (click)="changeDisplayMode(displayModeEnum.Map)" [class.active]="displayMode === displayModeEnum.Map">
-                            <span class="glyphicon glyphicon-map-marker"></span> Map View
-                        </a>
-                    </li> -->
                 </ul>
-<!--                 <cm-filter-textbox class="navbar-right"
-                 (changed)="filterChanged($event)"></cm-filter-textbox> -->
             </div>
         </div>
     </div>
@@ -42,10 +18,6 @@
 
     <app-stores-grid
     [stores]="stores"></app-stores-grid>
-
-
-
-    <!-- <app-pagination></app-pagination> -->
 
   </div>
 </div>

@@ -59,6 +59,6 @@ export class InventoryService {
       this.queryStockByMerchandise(merchandiseID).subscribe(infos => {
         this.merchandiseStockinfos = infos;
         this.eventBus.emit(new EmitEvent(Events.MerchandiseStockFound, this.merchandiseStockinfos));
-      })
+      });
     }
 }

@@ -45,6 +45,7 @@ export class SidebarComponent implements OnInit {
         this.eventBus.on(Events.UserChanged, (user => this.current_user = user.username));
 
         this.userService.getUserFromEvent();
+        this.translate.use('zh-CHS');
     }
 
 
@@ -79,10 +80,6 @@ export class SidebarComponent implements OnInit {
     rltAndLtr() {
         const dom: any = document.querySelector('body');
         dom.classList.toggle('rtl');
-    }
-
-    changeLang(language: string) {
-        this.translate.use(language);
     }
 
     onLoggedout() {

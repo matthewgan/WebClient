@@ -46,7 +46,7 @@ export class StockInComponent implements AfterViewInit {
   config: FieldConfig[] = [
     {
       type: 'input',
-      label: 'Merchandise',
+      label: '条形码',
       name: 'merchandiseBarcode',
       placeholder: 'Input barcode of the merchandise',
       validation: [
@@ -57,7 +57,7 @@ export class StockInComponent implements AfterViewInit {
     },
     {
       type: 'select',
-      label: 'Select Merchandise',
+      label: '选择商品',
       name: 'merchandiseSelected',
       options: [],
       disabled: true,
@@ -65,7 +65,7 @@ export class StockInComponent implements AfterViewInit {
     },
     {
       type: 'select',
-      label: 'Shop',
+      label: '店铺名称',
       name: 'shop',
       options: [],
       placeholder: 'Select a shop',
@@ -73,7 +73,7 @@ export class StockInComponent implements AfterViewInit {
     },
     {
       type: 'input',
-      label: 'number',
+      label: '数量',
       name: 'number',
       validation: [
         Validators.required,
@@ -84,7 +84,7 @@ export class StockInComponent implements AfterViewInit {
     },
     {
       type: 'select',
-      label: 'Supplier',
+      label: '供应商',
       name: 'supplier',
       options: [],
       placeholder: 'Select a supplier',
@@ -92,14 +92,14 @@ export class StockInComponent implements AfterViewInit {
     },
     {
       type: 'input',
-      label: 'operator',
+      label: '操作员',
       name: 'operator',
       disabled: false,
       validation: [Validators.required],
       value: ''
     },
     {
-      label: 'Submit',
+      label: '提交',
       name: 'submit',
       type: 'button',
       disabled: true

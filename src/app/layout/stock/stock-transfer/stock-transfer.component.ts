@@ -40,7 +40,7 @@ export class StockTransferComponent implements AfterViewInit {
   config: FieldConfig[] = [
     {
       type: 'input',
-      label: 'Merchandise',
+      label: '条形码',
       name: 'merchandiseBarcode',
       placeholder: 'Input barcode of the merchandise',
       validation: [
@@ -50,7 +50,7 @@ export class StockTransferComponent implements AfterViewInit {
     },
     {
       type: 'select',
-      label: 'Select Merchandise',
+      label: '选择商品',
       name: 'merchandiseSelected',
       options: [],
       disabled: true,
@@ -58,7 +58,7 @@ export class StockTransferComponent implements AfterViewInit {
     },
     {
       type: 'select',
-      label: 'from Shop',
+      label: '转出店铺',
       name: 'from_shop',
       options: [],
       placeholder: 'Select a shop',
@@ -66,7 +66,7 @@ export class StockTransferComponent implements AfterViewInit {
     },
     {
       type: 'select',
-      label: 'to Shop',
+      label: '转入店铺',
       name: 'to_shop',
       options: [],
       placeholder: 'Select a shop',
@@ -74,21 +74,21 @@ export class StockTransferComponent implements AfterViewInit {
     },
     {
       type: 'input',
-      label: 'number',
+      label: '数量',
       name: 'number',
       validation: [Validators.required, Validators.min(1)],
       value: 0
     },
     {
       type: 'input',
-      label: 'operator',
+      label: '操作员',
       name: 'operator',
       disabled: false,
       validation: [Validators.required],
       value: '',
     },
     {
-      label: 'Submit',
+      label: '提交',
       name: 'submit',
       type: 'button',
       disabled: true
@@ -167,7 +167,7 @@ export class StockTransferComponent implements AfterViewInit {
       if (this.form.valid === true) {
         this.form.setDisabled('submit', false);
       } else {
-        this.form.setDisabled('submit', false);
+        this.form.setDisabled('submit', true);
       }
     });
   }

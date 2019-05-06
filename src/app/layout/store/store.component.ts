@@ -62,21 +62,21 @@ export class StoreComponent implements AfterViewInit {
   config: FieldConfig[] = [
     {
       type: 'input',
-      label: 'Shop Name',
+      label: '店铺名称',
       name: 'name',
       placeholder: 'Input a shop name',
       validation: [Validators.required],
     },
     {
       type: 'input',
-      label: 'City',
+      label: '城市',
       name: 'city',
       placeholder: 'Input a city',
       validation: [Validators.required],
     },
     {
       type: 'input',
-      label: 'Location',
+      label: '地址',
       name: 'locationDetail',
       placeholder: 'Input detail of location',
       validation: [Validators.required],
@@ -84,14 +84,14 @@ export class StoreComponent implements AfterViewInit {
     },
     {
       type: 'input',
-      label: 'Size',
+      label: '规模',
       name: 'size',
       placeholder: 'Input size of shop',
       validation: [Validators.required, Validators.pattern('[0-9.]+')],
       value: 100
     },
     {
-      label: 'Submit',
+      label: '提交',
       name: 'submit',
       type: 'button',
       disabled: true,

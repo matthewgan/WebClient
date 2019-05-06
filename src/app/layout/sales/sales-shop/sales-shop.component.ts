@@ -33,7 +33,7 @@ export class SalesShopComponent implements OnInit {
       this.shops = shops;
     }));
 
-    this.eventBus.on(Events.ShopSaleRecordUpdated,(shopRecords => {
+    this.eventBus.on(Events.ShopSaleRecordUpdated, (shopRecords => {
       this.shopSaleRecords = shopRecords;
       this.setDisplay();
     }));

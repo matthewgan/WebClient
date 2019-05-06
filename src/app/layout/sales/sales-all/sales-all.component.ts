@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ISalePagination } from 'src/app/shared/interfaces/sale.interface';
+import { ISalePagination, ISaleInfo } from 'src/app/shared/interfaces/sale.interface';
 import { IShopInfo } from 'src/app/shared/interfaces/shop.interface';
 import { IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interface';
 import { SaleService } from 'src/app/core/services/sale.service';
@@ -14,7 +14,7 @@ import { EventBusService, Events } from 'src/app/core/services/event-bus.service
 })
 export class SalesAllComponent implements OnInit {
 
-  salesRecords: ISalePagination;
+  salesRecords: ISaleInfo[];
   displaySales: any[];
   shops: IShopInfo[];
   merchandise: IMerchandiseInfo;
@@ -30,10 +30,10 @@ export class SalesAllComponent implements OnInit {
 
     this.eventBus.on(Events.ShopListUpdated, (shops => {
       this.shops = shops;
-      this.setShopName();
+      // this.setShopName();
     }));
     this.eventBus.on(Events.SaleRecordUpdated, (records => {
-      this.salesRecords = records;
+      this.salesRecords = records.results;
       this.setDisplay();
     }));
     this.eventBus.on(Events.MerchandiseIdFound, (merchandise => {
@@ -41,12 +41,13 @@ export class SalesAllComponent implements OnInit {
       this.setMerchandiseName();
     }));
 
-    this.saleService.getlistAllSaleRecordsFromEvent();
     this.shopService.getShopListFromEvent();
+    this.saleService.getlistAllSaleRecordsFromEvent();
+    // this.shopService.getShopListFromEvent();
   }
 
   setDisplay() {
-    this.displaySales = this.salesRecords.results.map(record => {
+    /* this.displaySales = this.salesRecords.results.map(record => {
       this.merchandiseService.getInfoByIdFromEvent(record.merchandise.toString());
       return {
         id: record.id,
@@ -56,20 +57,33 @@ export class SalesAllComponent implements OnInit {
         shopID: record.shop,
         merchandiseId: record.merchandise
       };
+    }); */
+    this.salesRecords.forEach(record => {
+      this.merchandiseService.getInfoByIdFromEvent(record.merchandise.toString());
+      record.shopName = this.shops.find(x => x.id === record.shop).name;
     });
+
   }
 
   setMerchandiseName() {
-    this.displaySales.forEach(res => {
+    /* this.displaySales.forEach(res => {
       if (res.merchandiseId === this.merchandise.id) {
         res.merchandiseName = this.merchandise.name;
+      }
+    }); */
+    this.salesRecords.forEach(record => {
+      if (record.merchandise === this.merchandise.id) {
+        record.merchandiseName = this.merchandise.name;
       }
     });
   }
 
   setShopName() {
-    this.displaySales.forEach(res => {
+    /* this.displaySales.forEach(res => {
       res.shopName = this.shops.find(x => x.id === res.shopID).name;
+    }); */
+    this.salesRecords.forEach(record => {
+      record.shopName = this.shops.find(x => x.id === record.shop).name;
     });
   }
 

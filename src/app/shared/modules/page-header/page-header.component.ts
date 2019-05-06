@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RouterModule, ActivatedRoute, Params } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-page-header',
@@ -9,18 +10,27 @@ import { RouterModule, ActivatedRoute, Params } from '@angular/router';
 export class PageHeaderComponent implements OnInit {
     @Input() heading: string;
     @Input() icon: string;
-
-    operationText: string;
+    displayText: string;
     constructor(
-      private route: ActivatedRoute
     ) {}
 
     ngOnInit() {
-      /* this.route.parent.params.subscribe((params: Params) => {
-        const id = +params['in'];
-        if (id !== 0) {
-          this.operationText = '';
+      switch (this.heading) {
+        case 'Stores': {
+          this.displayText = '店铺管理';
+          break;
         }
-      }); */
+        case 'Inventory': {
+          this.displayText = '库存管理';
+          break;
+        }
+        case 'Sales': {
+          this.displayText = '销量查询';
+          break;
+        }
+        default: {
+          break;
+        }
+      }
     }
 }

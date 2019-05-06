@@ -5,19 +5,19 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Shop</th>
-                            <th>Merchandise</th>
-                            <th>Number</th>
-                            <th>Created</th>
-                            <th>Updated</th>
+                            <th>编号</th>
+                            <th>店铺名称</th>
+                            <th>商品名称</th>
+                            <th>数量</th>
+                            <th>创建时间</th>
+                            <th>更新时间</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let sale of displaySales">
+                        <tr *ngFor="let sale of salesRecords">
                             <td>{{ sale.id }}</td>
-                            <td><a [routerLink]="['/sales/shop', sale.shopID]">{{ sale.shopName }}</a></td>
+                            <td><a [routerLink]="['/sales/shop', sale.shop]">{{ sale.shopName }}</a></td>
                             <td>{{ sale.merchandiseName }}</td>
                             <td>{{ sale.number }}</td>
                             <td>{{ sale.created | date:"MM/dd/yyyy" }}</td>
