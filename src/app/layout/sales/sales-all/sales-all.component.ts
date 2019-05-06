@@ -30,6 +30,7 @@ export class SalesAllComponent implements OnInit {
 
     this.eventBus.on(Events.ShopListUpdated, (shops => {
       this.shops = shops;
+      this.setShopName();
     }));
     this.eventBus.on(Events.SaleRecordUpdated, (records => {
       this.salesRecords = records;
@@ -40,8 +41,8 @@ export class SalesAllComponent implements OnInit {
       this.setMerchandiseName();
     }));
 
-    this.shopService.getShopListFromEvent();
     this.saleService.getlistAllSaleRecordsFromEvent();
+    this.shopService.getShopListFromEvent();
   }
 
   setDisplay() {
@@ -53,18 +54,22 @@ export class SalesAllComponent implements OnInit {
         created: record.created,
         updated: record.updated,
         shopID: record.shop,
-        shopName: this.shops.find(x => x.id === record.shop).name,
-        merchandiseId: record.merchandise,
-        merchandiseName: 'test'
+        merchandiseId: record.merchandise
       };
     });
   }
 
   setMerchandiseName() {
-    this.displaySales.forEach( res => {
+    this.displaySales.forEach(res => {
       if (res.merchandiseId === this.merchandise.id) {
         res.merchandiseName = this.merchandise.name;
       }
+    });
+  }
+
+  setShopName() {
+    this.displaySales.forEach(res => {
+      res.shopName = this.shops.find(x => x.id === res.shopID).name;
     });
   }
 

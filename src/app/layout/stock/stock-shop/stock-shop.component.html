@@ -19,7 +19,7 @@
                         <tr *ngFor="let info of displayInfos">
                             <td>{{ info.id }}</td>
                             <td>{{ info.shopName }}</td>
-                            <td>{{ info.merchandiseName }}</td>
+                            <td><a [routerLink]="['/stock/merchandise', info.merchandiseID]">{{ info.merchandiseName }}</a></td>
                             <td>{{ info.number }}</td>
                             <td>{{ info.supplierName }}</td>
                             <td>{{ info.created | date:"MM/dd/yyyy" }}</td>

@@ -60,8 +60,7 @@ export class SalesShopComponent implements OnInit {
         created: record.created,
         updated: record.updated,
         shopName: this.shops.find(x => x.id === record.shop).name,
-        merchandiseId: record.merchandise,
-        merchandiseName: 'test'
+        merchandiseId: record.merchandise
       };
     });
   }

@@ -184,7 +184,7 @@ export class StockInComponent implements AfterViewInit {
       console.log(merchandises);
       if (merchandises === 'NotFound') {
         // to do: create new merchandise modal
-        this.modalService.getModal('newMerchandise').open(true);
+        this.modalService.getModal('newMerchandise').open();
       } else {
         this.merchandises = merchandises;
         this.updateFormMerchandiseOptions();
