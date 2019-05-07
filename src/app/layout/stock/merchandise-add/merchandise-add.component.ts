@@ -36,7 +36,7 @@ export class MerchandiseAddComponent implements OnInit, AfterViewInit {
   config: FieldConfig[] = [
     {
       type: 'input',
-      label: 'Code',
+      label: '店内码',
       name: 'code',
       validation: [
         Validators.required,
@@ -45,8 +45,9 @@ export class MerchandiseAddComponent implements OnInit, AfterViewInit {
     },
     {
       type: 'input',
-      label: 'Barcode',
+      label: '商品识别码',
       name: 'barcode',
+      placeholder: '输入13位数字商品识别码',
       validation: [
         Validators.required,
         Validators.pattern('[0-9]{13}')
@@ -55,44 +56,44 @@ export class MerchandiseAddComponent implements OnInit, AfterViewInit {
     },
     {
       type: 'select',
-      label: 'Category',
+      label: '分类',
       name: 'category',
       options: [],
-      placeholder: 'Select a category',
+      placeholder: '选择商品分类',
       validation: [Validators.required],
     },
     {
       type: 'input',
-      label: 'Merchandise Name',
+      label: '商品名称',
       name: 'name',
       validation: [Validators.required],
     },
     {
       type: 'input',
-      label: 'Merchandise Brand',
+      label: '品牌',
       name: 'brand',
       value: '',
     },
     {
       type: 'input',
-      label: 'Merchandise Scale',
+      label: '容量',
       name: 'scale',
       value: '',
     },
     {
       type: 'input',
-      label: 'Merchandise Factory',
+      label: '生产厂商',
       name: 'factory',
       value: '',
     },
     {
       type: 'input',
-      label: 'Merchandise Unit',
+      label: '计量单位',
       name: 'unit',
       value: '',
     },
     {
-      label: 'Submit',
+      label: '提交',
       name: 'submit',
       type: 'button',
       disabled: true
@@ -176,19 +177,4 @@ export class MerchandiseAddComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  // setValue() {
-  //   this.merchandise.barcode = this.getBarcode();
-  //   this.merchandise.name = this.temp.name;
-  //   this.merchandise.brand = this.temp.brand;
-  //   this.merchandise.scale = this.temp.scale;
-  //   this.merchandise.factory = this.temp.factory;
-  //   this.merchandise.unit = this.temp.unit;
-  //   this.merchandise.categoryID = this.getCategoryID();
-  // }
-
-  // getCategoryID() {
-  //   return this.categories.find(x => x.name === this.temp.categoryName).id;
-  // }
-
-
 }

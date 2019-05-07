@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -26,7 +26,7 @@ import { SupplierService } from 'src/app/core/services/supplier.service';
   styleUrls: ['./stock-in.component.scss']
 })
 
-export class StockInComponent implements AfterViewInit {
+export class StockInComponent implements OnDestroy, AfterViewInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
@@ -48,12 +48,12 @@ export class StockInComponent implements AfterViewInit {
       type: 'input',
       label: '条形码',
       name: 'merchandiseBarcode',
-      placeholder: 'Input barcode of the merchandise',
+      placeholder: '输入13位数字商品识别码',
       validation: [
         Validators.required,
         Validators.pattern('[0-9]{13}')
       ],
-      value: localStorage.getItem('barcode')
+      // value: localStorage.getItem('barcode')
     },
     {
       type: 'select',
@@ -68,7 +68,7 @@ export class StockInComponent implements AfterViewInit {
       label: '店铺名称',
       name: 'shop',
       options: [],
-      placeholder: 'Select a shop',
+      placeholder: '选择入库店铺',
       validation: [Validators.required],
     },
     {
@@ -87,7 +87,7 @@ export class StockInComponent implements AfterViewInit {
       label: '供应商',
       name: 'supplier',
       options: [],
-      placeholder: 'Select a supplier',
+      placeholder: '选择供应商',
       validation: [Validators.required],
     },
     {
@@ -154,6 +154,10 @@ export class StockInComponent implements AfterViewInit {
     this.isFound = false;
     this.form.config.find(x => x.name === 'merchandiseSelected').options = [];
     // this.form.setDisabled('merchandiseSelected', true);
+  }
+
+  ngOnDestroy() {
+    localStorage.removeItem('barcode');
   }
 
   // showModalChoice(): Promise<boolean> | boolean {
@@ -229,12 +233,12 @@ export class StockInComponent implements AfterViewInit {
     this.inventoryService.inStock(this.record).subscribe(
       resp => {
         if (resp.status === 201) {
-          console.log(resp.body);
-          this.growler.growl('OK', GrowlerMessageType.Success);
+          // console.log(resp.body);
+          this.growler.growl('入库成功', GrowlerMessageType.Success);
           localStorage.removeItem('barcode');
           this.form.form.reset();
         } else {
-
+          this.growler.growl('入库失败，请重试', GrowlerMessageType.Danger);
         }
       }
     );

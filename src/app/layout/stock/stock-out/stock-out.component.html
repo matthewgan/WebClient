@@ -1,9 +1,8 @@
+<h3>出库表单</h3>
 <div class="container">
-    <dynamic-form
-      [config]="config"
-      #form="dynamicForm"
-      (submit)="onSubmit($event)">
-    </dynamic-form>
-    {{ form.valid }}
-    {{ form.value | json }}
-  </div>
+  <dynamic-form
+    [config]="config"
+    #form="dynamicForm"
+    (submit)="onSubmit($event)">
+  </dynamic-form>
+</div>

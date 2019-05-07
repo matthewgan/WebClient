@@ -42,7 +42,7 @@ export class StockOutComponent implements AfterViewInit {
       type: 'input',
       label: '条形码',
       name: 'merchandiseBarcode',
-      placeholder: 'Input barcode of the merchandise',
+      placeholder: '输入13位数字商品识别码',
       validation: [
         Validators.required,
         Validators.pattern('[0-9]{13}')
@@ -61,7 +61,7 @@ export class StockOutComponent implements AfterViewInit {
       label: '店铺名称',
       name: 'shop',
       options: [],
-      placeholder: 'Select a shop',
+      placeholder: '选择出库店铺',
       validation: [Validators.required],
     },
     {
@@ -195,11 +195,11 @@ export class StockOutComponent implements AfterViewInit {
       resp => {
         if (resp.status === 201) {
           console.log(resp.body);
-          this.growler.growl('OK', GrowlerMessageType.Success);
+          this.growler.growl('出库成功', GrowlerMessageType.Success);
           localStorage.removeItem('barcode');
           this.form.form.reset();
         } else {
-
+          this.growler.growl('出库失败,请重试', GrowlerMessageType.Danger);
         }
       }
     );

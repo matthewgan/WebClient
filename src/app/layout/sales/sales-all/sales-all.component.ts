@@ -44,6 +44,7 @@ export class SalesAllComponent implements OnInit {
   }
 
   setDisplay() {
+    this.salesRecords = this.salesRecords.slice(0, 10);
     this.salesRecords.forEach(record => {
       this.merchandiseService.getInfoByIdFromEvent(record.merchandise.toString());
       record.shopName = this.shops.find(x => x.id === record.shop).name;

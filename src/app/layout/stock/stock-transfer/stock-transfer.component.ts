@@ -183,10 +183,15 @@ export class StockTransferComponent implements AfterViewInit {
     this.inventoryService.transferStock(this.record).subscribe(
       resp => {
         if (resp.status === 204) {
-          console.log(resp.statusText);
-          console.log(resp.body);
+          console.log(JSON.parse(resp.body.toString()).number);
+          const left_number = JSON.parse(resp.body.toString()).number;
+          this.growler.growl('源仓库库存不足，当前库存' + left_number, GrowlerMessageType.Warning);
         } else if (resp.status === 200) {
-          console.log(resp);
+          const get_number = JSON.parse(resp.body.toString()).number;
+          this.growler.growl('库存转移成功，目标仓库库存' + get_number, GrowlerMessageType.Success);
+          this.form.form.reset();
+        } else {
+          this.growler.growl('操作失败，请重试', GrowlerMessageType.Danger);
         }
       }
     );

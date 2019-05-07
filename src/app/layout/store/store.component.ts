@@ -84,7 +84,7 @@ export class StoreComponent implements AfterViewInit {
     },
     {
       type: 'input',
-      label: '规模',
+      label: '面积',
       name: 'size',
       placeholder: 'Input size of shop',
       validation: [Validators.required, Validators.pattern('[0-9.]+')],
