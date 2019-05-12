@@ -15,6 +15,7 @@ import { CategoryService } from './services/category.service';
 import { SupplierService } from './services/supplier.service';
 import { MerchandiseService } from './services/merchandise.service';
 import { InventoryService } from './services/inventory.service';
+import { PagerService } from './services/pager.service';
 
 @NgModule({
     declarations: [],
@@ -36,6 +37,7 @@ import { InventoryService } from './services/inventory.service';
         MerchandiseService,
         InventoryService,
         EventBusService,
+        PagerService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: HttpConfigInterceptor,

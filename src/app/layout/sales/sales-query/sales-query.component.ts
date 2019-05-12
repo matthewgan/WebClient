@@ -12,11 +12,11 @@ import { IMerchandiseInfo } from 'src/app/shared/interfaces/merchandise.interfac
 import { EventBusService, Events } from 'src/app/core/services/event-bus.service';
 
 @Component({
-  selector: 'app-stock-query',
-  templateUrl: './stock-query.component.html',
-  styleUrls: ['./stock-query.component.scss']
+  selector: 'app-sales-query',
+  templateUrl: './sales-query.component.html',
+  styleUrls: ['./sales-query.component.scss']
 })
-export class StockQueryComponent implements AfterViewInit {
+export class SalesQueryComponent implements AfterViewInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
@@ -105,7 +105,6 @@ export class StockQueryComponent implements AfterViewInit {
 
   onSubmit(value: {[name: string]: any}) {
     const mid = JSON.parse(value['merchandiseSelected']).id;
-    this.router.navigate(['/stock/merchandise/' + mid]);
+    this.router.navigate(['/sales/merchandise/' + mid]);
   }
-
 }

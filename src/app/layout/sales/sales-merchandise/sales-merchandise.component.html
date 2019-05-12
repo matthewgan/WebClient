@@ -1,4 +1,4 @@
-<h3>销售记录</h3>
+<h3>单品销售记录</h3>
 <div class="container">
     <div class="row grid-container">
         <div class="col-md-10">
@@ -29,24 +29,4 @@
             </div>
         </div>
     </div>
-    <div>
-        <!-- pager -->
-        <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
-            <li [ngClass]="{disabled:pager.currentPage === 1}">
-                <a class="page-item" (click)="setPage(1)">首页</a>
-            </li>
-            <li [ngClass]="{disabled:pager.currentPage === 1}">
-                <a (click)="setPreviousPage()">上一页</a>
-            </li>
-            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
-                <a (click)="setPage(page)">{{page}}</a>
-            </li>
-            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
-                <a (click)="setNextPage()">下一页</a>
-            </li>
-            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
-                <a (click)="setPage(pager.totalPages)">末页</a>
-            </li>
-        </ul>
-    </div>    
 </div>

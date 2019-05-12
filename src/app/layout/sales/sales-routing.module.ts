@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { SalesComponent } from './sales.component';
 import { SalesAllComponent } from './sales-all/sales-all.component';
 import { SalesShopComponent } from './sales-shop/sales-shop.component';
+import { SalesMerchandiseComponent } from '../sales/sales-merchandise/sales-merchandise.component';
+import { SalesQueryComponent } from './sales-query/sales-query.component';
 
 const routes: Routes = [
   { path: '',
@@ -11,6 +13,8 @@ const routes: Routes = [
     { path: '', redirectTo: 'all' },
     { path: 'all', component: SalesAllComponent },
     { path: 'shop/:id', component: SalesShopComponent },
+    { path: 'merchandise/:id', component: SalesMerchandiseComponent},
+    { path: 'query', component: SalesQueryComponent},
   ]
 },
 ];

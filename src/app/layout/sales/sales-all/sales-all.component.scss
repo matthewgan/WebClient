@@ -1,0 +1,20 @@
+.pagination { 
+    display: inline-flexbox; 
+} 
+.center { 
+    text-align:center; 
+} 
+.pagination a { 
+    font-size:20px; 
+    color: black; 
+    float: left; 
+    text-decoration: none; 
+    border:1px solid black; 
+    cursor: pointer;
+} 
+.pagination li.active { 
+    background-color:#2a9adb; 
+} 
+.pagination li:hover:not(.active) { 
+    background-color: #c1d698; 
+} 

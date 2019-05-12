@@ -42,10 +42,10 @@ export class StockOutComponent implements AfterViewInit {
       type: 'input',
       label: '条形码',
       name: 'merchandiseBarcode',
-      placeholder: '输入13位数字商品识别码',
+      placeholder: '输入8/9/12/13位数字商品识别码',
       validation: [
         Validators.required,
-        Validators.pattern('[0-9]{13}')
+        Validators.pattern('[0-9]{13}|[0-9]{12}|[0-9]{8}|[0-9]{9}')
       ]
     },
     {

@@ -47,10 +47,10 @@ export class MerchandiseAddComponent implements OnInit, AfterViewInit {
       type: 'input',
       label: '商品识别码',
       name: 'barcode',
-      placeholder: '输入13位数字商品识别码',
+      placeholder: '输入8/9/12/13位数字商品识别码',
       validation: [
         Validators.required,
-        Validators.pattern('[0-9]{13}')
+        Validators.pattern('[0-9]{13}|[0-9]{12}|[0-9]{8}|[0-9]{9}')
       ],
       value: localStorage.getItem('barcode')
     },
